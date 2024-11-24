@@ -7,13 +7,10 @@ type MapType = {
       lat: number;
       lng: number;
     };
-    isSave: boolean;
   };
-  errMsg: string;
-  address: string;
-  setSaveState: (center: { lat: number; lng: number }, isSave: boolean) => void;
-  setErrMsg: (errMsg: string) => void;
-  setAddress: (address: string) => void;
+  isSaved: boolean;
+  setSaveState: (center: { lat: number; lng: number }) => void;
+  setIsSaved: (isSaved: boolean) => void;
 };
 
 export const useMapStore = create(
@@ -24,28 +21,21 @@ export const useMapStore = create(
           lat: 33.450701,
           lng: 126.570667,
         },
-        isSave: false,
       },
-      errMsg: "",
-      address: "",
+      isSaved: false,
 
-      setSaveState: (center: { lat: number; lng: number }, isSave: boolean) => {
+      setSaveState: (center: { lat: number; lng: number }) => {
         set({
           saveState: {
             center: { lat: center.lat, lng: center.lng },
-            isSave,
           },
         });
       },
-
-      setErrMsg: (errMsg: string) =>
-        set(() => ({
-          errMsg: "",
-        })),
-      setAddress: (address: string) =>
-        set(() => ({
-          address: "",
-        })),
+      setIsSaved: (isSaved: boolean) => {
+        set({
+          isSaved,
+        });
+      },
     }),
     {
       name: "saveState",
