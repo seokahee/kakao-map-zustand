@@ -15,7 +15,7 @@ type MapType = {
 
 export const useMapStore = create(
   persist<MapType>(
-    (set, _) => ({
+    (set) => ({
       saveState: {
         center: {
           lat: 33.450701,
