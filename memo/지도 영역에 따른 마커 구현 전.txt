@@ -18,8 +18,6 @@ function MapMultiMarker() {
     Object.fromEntries(storePositions.map((item) => [item.id, false]))
   );
 
-  const [visibleMarkers, setVisibleMarkers] = useState(storePositions);
-
   const { saveState, isSaved, setSaveState, setIsSaved } = useMapStore();
 
   // 컴포넌트 마운트 시 초기화
@@ -109,31 +107,6 @@ function MapMultiMarker() {
     getAddressHandle(newPosition.lat, newPosition.lng);
   };
 
-  // 지도영역에 포함된 마커만 출력
-  const onBoundsChangeHandler = (map: any) => {
-    const bounds = map.getBounds(); // 지도 영역값 가져오기
-
-    const sw = bounds.getSouthWest();
-    const ne = bounds.getNorthEast();
-
-    // console.log("bounds", bounds);
-
-    const filteredMarkers = storePositions.filter((position) => {
-      const lat = Number(position.lat);
-      const lng = Number(position.lng);
-      const markerLatLng = new kakao.maps.LatLng(lat, lng);
-      return bounds.contain(markerLatLng); // 지도 경계 내 포함 여부 확인
-    });
-
-    setVisibleMarkers(filteredMarkers);
-
-    // console.log(
-    //   "Visible Markers:",
-    //   `${visibleMarkers.length}개`,
-    //   visibleMarkers
-    // );
-  };
-
   // 머신 마커 이미지 설정
   const getMarkerImage = (machineType: string) => {
     switch (machineType) {
@@ -181,9 +154,8 @@ function MapMultiMarker() {
         }}
         level={3}
         onCenterChanged={(map) => centerChangeHandler(map)}
-        onBoundsChanged={(map) => onBoundsChangeHandler(map)}
       >
-        {visibleMarkers.map((item) => {
+        {storePositions.map((item) => {
           const lat = Number(item.lat);
           const lng = Number(item.lng);
           const markerImage = getMarkerImage(item.machine); // 머신 종류에 따른 이미지 가져오기
@@ -270,26 +242,12 @@ function MapMultiMarker() {
 }
 
 export default MapMultiMarker;
-
 // 출력된 지도 영역에 존재하는 마커 출력 ( 지도 영역에 존재하는 마커만 출력)
 // 지도 영역안에 매장 위경도가 포함되면 출력, 그렇지않으면 출력하지말라
 // - 로드된 지도의 좌표를 기반으로 마커를 넣어야게쮸
-
-// 마커 겹침 문제
-// 마우스 이동 시 지도 영역에 마커가 들어오면 출력하고싶은데 어떤건 이동중에도 나오고 , 어떤건 내려놔야나온다
-// 이유가뭘까 뭘까 아아암누암넝ㄴ머안머ㅣ아ㅓㄴㅁㅇㅁㄴ;아ㅣㅓ
-
-//  지도 중심좌표를 기준으로 주소를 뽑아서 해당 주소에 포함된 마커만 출력\
-// 좌표로 대량의 데이터를 필터링하면 선능이 떨어질수밖에
-// 드롭 시 마커가 출력되어야함
-// 현재 내 위치 마커 다시 표시하기
 
 // 클러스터 (영역 분리 확실하게 구분되도록 작업 ex 다방)
 
 // 그 외
 // 드롭슬라이드 메뉴
 // 드롭시 삭제버튼이 오른쪽에 나오게
-
-// 완료 목록
-// 지도 영역에 존재하는 마커 출력
-//  - 마우스 이동 완료 후 마커가 출력되는 형식

@@ -5,7 +5,7 @@ function MapBasic() {
   const mapRef = useRef(null);
   const { kakao } = window;
 
-  const position = new kakao.maps.LatLng(37.50678475, 127.0247075);
+  const position = new kakao.maps.LatLng(37.36882188674725, 127.11573729638069);
   const mapOptions = {
     center: position,
     level: 3,

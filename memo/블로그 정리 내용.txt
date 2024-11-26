@@ -1,3 +1,55 @@
+1. 지도 중심 좌표를 기준으로 지도 영역에 해당하는 좌표
+const centerChangeHandler = (map: any) => {
+  const newCenter = map.getCenter(); // 지도 중심 좌표
+  const bounds = map.getBounds(); // 지도 경계 좌표
+
+  const centerPosition = {
+    lat: newCenter.getLat(),
+    lng: newCenter.getLng(),
+  };
+
+  const sw = bounds.getSouthWest(); // 지도 남서쪽 좌표
+  const ne = bounds.getNorthEast(); // 지도 북동쪽 좌표
+
+  console.log("지도 중심 좌표:", centerPosition);
+  console.log("지도 경계 좌표:");
+  console.log("남서쪽:", { lat: sw.getLat(), lng: sw.getLng() });
+  console.log("북동쪽:", { lat: ne.getLat(), lng: ne.getLng() });
+
+  setMarkerState(centerPosition);
+  setMapState((prev) => ({
+    ...prev,
+    center: centerPosition,
+  }));
+
+  // 주소 검색 디바운스 처리
+  getAddressHandle(centerPosition.lat, centerPosition.lng);
+};
+
+
+map.getCenter():
+
+현재 지도 중심 좌표를 가져옵니다.
+반환값은 LatLng 객체로, getLat()와 getLng() 메서드를 사용해 위도와 경도를 얻을 수 있습니다.
+map.getBounds():
+
+현재 지도 화면의 경계 정보를 가져옵니다.
+반환값은 LatLngBounds 객체이며, getSouthWest()와 getNorthEast() 메서드를 통해 경계의 남서쪽과 북동쪽 좌표를 얻을 수 있습니다.
+출력 결과:
+
+console.log를 통해 지도 중심 좌표와 경계 좌표를 출력합니다.
+예를 들어, 남서쪽 좌표와 북동쪽 좌표는 지도 경계의 두 꼭짓점을 나타냅니다.
+
+결과 예시
+지도 중심 좌표: { lat: 33.450701, lng: 126.570667 }
+지도 경계 좌표:
+남서쪽: { lat: 33.445001, lng: 126.565000 }
+북동쪽: { lat: 33.456401, lng: 126.576334 }
+
+
+
+2. visibleMarkers 상태를 추가하여 지도의 현재 영역에 포함된 마커만 저장하고 렌더링합니다.
+
 import { useEffect, useMemo, useState } from "react";
 import { Map, MapMarker } from "react-kakao-maps-sdk";
 import { useMapStore } from "../store";
@@ -17,12 +69,10 @@ function MapMultiMarker() {
   const [isOpenStates, setIsOpenStates] = useState<Record<string, boolean>>(
     Object.fromEntries(storePositions.map((item) => [item.id, false]))
   );
-
-  const [visibleMarkers, setVisibleMarkers] = useState(storePositions);
+  const [visibleMarkers, setVisibleMarkers] = useState(storePositions); // 현재 보이는 마커 상태
 
   const { saveState, isSaved, setSaveState, setIsSaved } = useMapStore();
 
-  // 컴포넌트 마운트 시 초기화
   useEffect(() => {
     if (isSaved && saveState.center) {
       setMarkerState(saveState.center);
@@ -30,13 +80,11 @@ function MapMultiMarker() {
         ...prev,
         center: saveState.center,
       }));
-      getAddressHandle(saveState.center.lat, saveState.center.lng);
     } else {
       getCurrentAddress();
     }
   }, []);
 
-  // 현재 위치 가져오기
   const getCurrentAddress = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -45,14 +93,11 @@ function MapMultiMarker() {
             lat: position.coords.latitude,
             lng: position.coords.longitude,
           };
-
           setMapState((prev) => ({
             ...prev,
             center: newCenter,
           }));
-
           setMarkerState(newCenter);
-          getAddressHandle(newCenter.lat, newCenter.lng);
         },
         (err) => {
           setMapState((prev) => ({ ...prev, errMsg: err.message }));
@@ -66,11 +111,9 @@ function MapMultiMarker() {
     }
   };
 
-  // 좌표를 주소로 변환
   const getAddressHandle = useMemo(
     () =>
       debounce((lat: number, lng: number) => {
-        // console.log("주소 변환 요청:", lat, lng);
         const geocoder = new window.kakao.maps.services.Geocoder();
         geocoder.coord2Address(lng, lat, (result: any, status: any) => {
           if (status === kakao.maps.services.Status.OK) {
@@ -90,51 +133,19 @@ function MapMultiMarker() {
     [isSaved]
   );
 
-  // 중심좌표 구하기
-  const centerChangeHandler = (map: any) => {
-    const newCenter = map.getCenter();
-
-    const newPosition = {
-      lat: newCenter.getLat(),
-      lng: newCenter.getLng(),
-    };
-
-    setMarkerState(newPosition);
-    setMapState((prev) => ({
-      ...prev,
-      center: newPosition,
-    }));
-
-    // 주소 검색 디바운스 처리
-    getAddressHandle(newPosition.lat, newPosition.lng);
-  };
-
-  // 지도영역에 포함된 마커만 출력
+  // 지도 경계가 변경될 때 호출되는 함수
   const onBoundsChangeHandler = (map: any) => {
-    const bounds = map.getBounds(); // 지도 영역값 가져오기
+    const bounds = map.getBounds(); // 지도 경계값 가져오기
 
-    const sw = bounds.getSouthWest();
-    const ne = bounds.getNorthEast();
-
-    // console.log("bounds", bounds);
-
+    // 지도 영역 내에 포함된 마커 필터링
     const filteredMarkers = storePositions.filter((position) => {
-      const lat = Number(position.lat);
-      const lng = Number(position.lng);
-      const markerLatLng = new kakao.maps.LatLng(lat, lng);
-      return bounds.contain(markerLatLng); // 지도 경계 내 포함 여부 확인
+      const markerLatLng = new kakao.maps.LatLng(position.lat, position.lng);
+      return bounds.contain(markerLatLng); // 경계 내 포함 여부 확인
     });
 
-    setVisibleMarkers(filteredMarkers);
-
-    // console.log(
-    //   "Visible Markers:",
-    //   `${visibleMarkers.length}개`,
-    //   visibleMarkers
-    // );
+    setVisibleMarkers(filteredMarkers); // 보이는 마커만 업데이트
   };
 
-  // 머신 마커 이미지 설정
   const getMarkerImage = (machineType: string) => {
     switch (machineType) {
       case "아이머신":
@@ -149,21 +160,9 @@ function MapMultiMarker() {
           size: { width: 32, height: 32 },
           options: { offset: { x: 16, y: 32 } },
         };
-      case "멀티머신":
-        return {
-          src: "https://play-lh.googleusercontent.com/q8Bo5joSXW_ahRPpfvzlBGyRwRfDEjBEevOU496rLt54upZ_dbs9zTo9wUCMkmoBYx4=w240-h480-rw",
-          size: { width: 32, height: 32 },
-          options: { offset: { x: 16, y: 32 } },
-        };
-      case "조이머신":
-        return {
-          src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxUxPdchLCrOSC1JGr73rAwrpxOPsdOQxwcQ&s",
-          size: { width: 32, height: 32 },
-          options: { offset: { x: 16, y: 32 } },
-        };
       default:
         return {
-          src: "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png", // 기본 이미지
+          src: "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png",
           size: { width: 32, height: 32 },
           options: { offset: { x: 16, y: 32 } },
         };
@@ -180,13 +179,12 @@ function MapMultiMarker() {
           height: "80vh",
         }}
         level={3}
-        onCenterChanged={(map) => centerChangeHandler(map)}
-        onBoundsChanged={(map) => onBoundsChangeHandler(map)}
+        onBoundsChanged={(map) => onBoundsChangeHandler(map)} // 경계 변경 이벤트
       >
         {visibleMarkers.map((item) => {
           const lat = Number(item.lat);
           const lng = Number(item.lng);
-          const markerImage = getMarkerImage(item.machine); // 머신 종류에 따른 이미지 가져오기
+          const markerImage = getMarkerImage(item.machine);
 
           return (
             <MapMarker
@@ -229,67 +227,19 @@ function MapMultiMarker() {
             </MapMarker>
           );
         })}
-
-        {/* <CustomOverlayMap position={markerState} yAnchor={1}>
-          <div
-            style={{
-              backgroundColor: "#fff",
-              padding: "10px",
-              border: "1px solid #ddd",
-              boxShadow: "2px 2px 5px rgba(0, 0, 0, 0.2)",
-            }}
-          >
-            {mapState.errMsg ? mapState.errMsg : mapState.address}
-          </div>
-        </CustomOverlayMap> */}
       </Map>
-      <div className="pointer-btn-wrap">
-        <button
-          className="pointer-btn"
-          onClick={() => {
-            setSaveState(markerState);
-            setIsSaved(true);
-            getAddressHandle(markerState.lat, markerState.lng);
-          }}
-        >
-          위치 저장
-        </button>
-        <button
-          className="pointer-btn"
-          onClick={() => {
-            setIsSaved(false);
-            getCurrentAddress();
-          }}
-        >
-          현재 위치
-        </button>
-        <button className="pointer-btn"> 내 위치 마커</button>
-      </div>
     </div>
   );
 }
 
 export default MapMultiMarker;
 
-// 출력된 지도 영역에 존재하는 마커 출력 ( 지도 영역에 존재하는 마커만 출력)
-// 지도 영역안에 매장 위경도가 포함되면 출력, 그렇지않으면 출력하지말라
-// - 로드된 지도의 좌표를 기반으로 마커를 넣어야게쮸
 
-// 마커 겹침 문제
-// 마우스 이동 시 지도 영역에 마커가 들어오면 출력하고싶은데 어떤건 이동중에도 나오고 , 어떤건 내려놔야나온다
-// 이유가뭘까 뭘까 아아암누암넝ㄴ머안머ㅣ아ㅓㄴㅁㅇㅁㄴ;아ㅣㅓ
+onBoundsChanged:
 
-//  지도 중심좌표를 기준으로 주소를 뽑아서 해당 주소에 포함된 마커만 출력\
-// 좌표로 대량의 데이터를 필터링하면 선능이 떨어질수밖에
-// 드롭 시 마커가 출력되어야함
-// 현재 내 위치 마커 다시 표시하기
+지도 영역 변경 시 호출됩니다.
+getBounds()로 지도 경계값을 가져와 storePositions의 각 마커가 포함되는지 확인합니다.
+visibleMarkers:
 
-// 클러스터 (영역 분리 확실하게 구분되도록 작업 ex 다방)
-
-// 그 외
-// 드롭슬라이드 메뉴
-// 드롭시 삭제버튼이 오른쪽에 나오게
-
-// 완료 목록
-// 지도 영역에 존재하는 마커 출력
-//  - 마우스 이동 완료 후 마커가 출력되는 형식
+현재 지도에 표시할 마커 목록을 상태로 관리하여, 불필요한 마커를 렌더링하지 않도록 합니다.
+이제 지도 경계 내에 포함된 마커만 화면에 표시됩니다.

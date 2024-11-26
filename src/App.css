@@ -13,7 +13,7 @@
   display: flex;
   margin-top: 2em;
   justify-content: center;
-  gap: 10em;
+  gap: 5em;
 }
 
 .pointer-btn {
@@ -26,43 +26,6 @@
   cursor: pointer;
 }
 
-/* import React, { useState } from "react";
-import { Map, CustomOverlayMap } from "react-kakao-maps-sdk";
-
-const overlayData = [
-  { id: 1, position: { lat: 127.0247075, lng: 37.5067847499904 }, content: "첫 번째 오버레이" },
-  { id: 2, position: { lat: 126.687635393482, lng: 36.5603132409155 }, content: "두 번째 오버레이" },
-  { id: 3, position: { lat: 127.054181311682, lng: 37.0816120999622 }, content: "두 번째 오버레이" },
-  { id: 4, position: { lat: 1127.455904596905, lng: 36.3056783448982 }, content: "두 번째 오버레이" },
-  { id: 5, position: { lat: 126.687635393482, lng: 36.5603132409155 }, content: "두 번째 오버레이" },
-];
-
-function KakaoMap() {
-  const [overlays] = useState(overlayData);
-
-  return (
-    <Map
-      center={{ lat: 33.450701, lng: 126.570667 }}
-      style={{ width: "100%", height: "400px" }}
-      level={3}
-    >
-      {overlays.map((overlay) => (
-        <CustomOverlayMap key={overlay.id} position={overlay.position}>
-          <div
-            style={{
-              backgroundColor: "#fff",
-              padding: "10px",
-              border: "1px solid #ddd",
-              borderRadius: "5px",
-              boxShadow: "2px 2px 5px rgba(0, 0, 0, 0.2)",
-            }}
-          >
-            {overlay.content}
-          </div>
-        </CustomOverlayMap>
-      ))}
-    </Map>
-  );
+.pointer-btn:hover {
+  background-color: yellow;
 }
-
-export default KakaoMap; */

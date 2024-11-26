@@ -116,7 +116,6 @@ function MapSingleMarker() {
 
   return (
     <div className="map-wrap">
-      {/* <KakaoMap></KakaoMap> */}
       <Map
         center={isSaved ? saveState.center : mapState.center}
         style={{
