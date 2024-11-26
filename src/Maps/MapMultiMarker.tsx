@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Map, MapMarker } from "react-kakao-maps-sdk";
 import { useMapStore } from "../store";
 import { storePositions } from "../storeData";
@@ -14,7 +14,7 @@ function MapMultiMarker() {
     address: "",
     errMsg: "",
   });
-  const [filteredMarkers, setFilteredMarkers] = useState(storePositions);
+  // const [filteredMarkers, setFilteredMarkers] = useState(storePositions);
   const [visibleMarkers, setVisibleMarkers] = useState<StorePositionsType[]>(
     []
   );
@@ -75,7 +75,7 @@ function MapMultiMarker() {
       debounce((lat: number, lng: number) => {
         // console.log("주소 변환 요청:", lat, lng);
         const geocoder = new window.kakao.maps.services.Geocoder();
-        geocoder.coord2Address(lng, lat, (result: any, status: any) => {
+        geocoder.coord2Address(lng, lat, (result: any, status: string) => {
           if (status === kakao.maps.services.Status.OK) {
             const address = result[0].address.address_name;
             setMapState((prev) => ({
@@ -87,7 +87,7 @@ function MapMultiMarker() {
             const markers = storePositions.filter((item) => {
               return item.address.includes(region);
             });
-            setFilteredMarkers(markers);
+            setVisibleMarkers(markers);
 
             // console.log(region);
             // console.log(
@@ -109,7 +109,6 @@ function MapMultiMarker() {
   // 중심좌표 구하기
   const centerChangeHandler = (map: any) => {
     const newCenter = map.getCenter();
-
     const newPosition = {
       lat: newCenter.getLat(),
       lng: newCenter.getLng(),
@@ -131,7 +130,7 @@ function MapMultiMarker() {
 
     // console.log("bounds", bounds);
 
-    const filtered = filteredMarkers.filter((marker) => {
+    const filteredMarkers = visibleMarkers.filter((marker) => {
       const markerLatLng = new kakao.maps.LatLng(
         Number(marker.lat),
         Number(marker.lng)
@@ -139,7 +138,7 @@ function MapMultiMarker() {
       return bounds.contain(markerLatLng); // 지도 경계 내 포함 여부 확인
     });
 
-    setVisibleMarkers(filtered);
+    setVisibleMarkers(filteredMarkers);
 
     // console.log(
     //   "Visible Markers:",
@@ -184,17 +183,25 @@ function MapMultiMarker() {
     }
   };
 
+  // const isDragging = useRef(false);
+
+  // 드롭 이벤트로 드롭 시 마커 표시되게
   return (
     <div className="map-wrap">
       <Map
         center={isSaved ? saveState.center : mapState.center}
         style={{
-          maxWidth: "800px",
+          // maxWidth: "800px",
           width: "100%",
           height: "80vh",
         }}
         level={3}
-        onCenterChanged={(map) => centerChangeHandler(map)}
+        // onDragStart={() => {
+        //   isDragging.current = true;
+        //   setVisibleMarkers([]);
+        // }}
+        onDragEnd={(map) => centerChangeHandler(map)}
+        // onCenterChanged={(map) => centerChangeHandler(map)}
         onBoundsChanged={(map) => onBoundsChangeHandler(map)}
       >
         {visibleMarkers.map((item) => {
@@ -284,18 +291,9 @@ function MapMultiMarker() {
 }
 
 export default MapMultiMarker;
-
-// 출력된 지도 영역에 존재하는 마커 출력 ( 지도 영역에 존재하는 마커만 출력)
-// 지도 영역안에 매장 위경도가 포함되면 출력, 그렇지않으면 출력하지말라
-// - 로드된 지도의 좌표를 기반으로 마커를 넣어야게쮸
-
 // 마커 겹침 문제
 // 마우스 이동 시 지도 영역에 마커가 들어오면 출력하고싶은데 어떤건 이동중에도 나오고 , 어떤건 내려놔야나온다
-// 이유가뭘까 뭘까 아아암누암넝ㄴ머안머ㅣ아ㅓㄴㅁㅇㅁㄴ;아ㅣㅓ
 
-//  지도 중심좌표를 기준으로 주소를 뽑아서 해당 주소에 포함된 마커만 출력\
-// 좌표로 대량의 데이터를 필터링하면 선능이 떨어질수밖에
-// 드롭 시 마커가 출력되어야함
 // 현재 내 위치 마커 다시 표시하기
 
 // 클러스터 (영역 분리 확실하게 구분되도록 작업 ex 다방)
@@ -307,3 +305,4 @@ export default MapMultiMarker;
 // 완료 목록
 // 지도 영역에 존재하는 마커 출력
 //  - 마우스 이동 완료 후 마커가 출력되는 형식
+//  - 지도 중심 좌표 주소 변환 후 마커 필터링으로 로딩 속도 향상
