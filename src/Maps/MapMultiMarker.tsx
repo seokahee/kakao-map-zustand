@@ -3,6 +3,7 @@ import { Map, MapMarker } from "react-kakao-maps-sdk";
 import { useMapStore } from "../store";
 import { storePositions } from "../storeData";
 import { debounce } from "../useDebounce";
+import { StorePositionsType } from "../type";
 
 function MapMultiMarker() {
   const [mapState, setMapState] = useState({
@@ -13,12 +14,14 @@ function MapMultiMarker() {
     address: "",
     errMsg: "",
   });
+  const [filteredMarkers, setFilteredMarkers] = useState(storePositions);
+  const [visibleMarkers, setVisibleMarkers] = useState<StorePositionsType[]>(
+    []
+  );
   const [markerState, setMarkerState] = useState(mapState.center);
   const [isOpenStates, setIsOpenStates] = useState<Record<string, boolean>>(
     Object.fromEntries(storePositions.map((item) => [item.id, false]))
   );
-
-  const [visibleMarkers, setVisibleMarkers] = useState(storePositions);
 
   const { saveState, isSaved, setSaveState, setIsSaved } = useMapStore();
 
@@ -79,6 +82,19 @@ function MapMultiMarker() {
               ...prev,
               address,
             }));
+
+            const region = address.split(" ")[2];
+            const markers = storePositions.filter((item) => {
+              return item.address.includes(region);
+            });
+            setFilteredMarkers(markers);
+
+            // console.log(region);
+            // console.log(
+            //   "markers",
+            //   storePositions.map((item) => item.address.includes(region)),
+            //   markers
+            // );
           } else {
             setMapState((prev) => ({
               ...prev,
@@ -113,19 +129,17 @@ function MapMultiMarker() {
   const onBoundsChangeHandler = (map: any) => {
     const bounds = map.getBounds(); // 지도 영역값 가져오기
 
-    const sw = bounds.getSouthWest();
-    const ne = bounds.getNorthEast();
-
     // console.log("bounds", bounds);
 
-    const filteredMarkers = storePositions.filter((position) => {
-      const lat = Number(position.lat);
-      const lng = Number(position.lng);
-      const markerLatLng = new kakao.maps.LatLng(lat, lng);
+    const filtered = filteredMarkers.filter((marker) => {
+      const markerLatLng = new kakao.maps.LatLng(
+        Number(marker.lat),
+        Number(marker.lng)
+      );
       return bounds.contain(markerLatLng); // 지도 경계 내 포함 여부 확인
     });
 
-    setVisibleMarkers(filteredMarkers);
+    setVisibleMarkers(filtered);
 
     // console.log(
     //   "Visible Markers:",

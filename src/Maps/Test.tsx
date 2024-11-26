@@ -1,13 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
-import {
-  CustomOverlayMap,
-  Map,
-  MapMarker,
-  Polygon,
-} from "react-kakao-maps-sdk";
-import { useMapStore } from "../store";
-import { storePositions } from "../storeData";
-import { debounce } from "../useDebounce";
+import { useState } from "react";
+import { CustomOverlayMap, Map, Polygon } from "react-kakao-maps-sdk";
 
 function Test() {
   const [isdrawing, setIsdrawing] = useState<any>(false);
