@@ -1,9 +1,9 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Map, MapMarker } from "react-kakao-maps-sdk";
 import { useMapStore } from "../store";
 import { storePositions } from "../storeData";
-import { debounce } from "../useDebounce";
 import { StorePositionsType } from "../type";
+import { debounce } from "../useDebounce";
 
 function MapMultiMarker() {
   const [mapState, setMapState] = useState({
@@ -15,20 +15,22 @@ function MapMultiMarker() {
     errMsg: "",
   });
   // const [filteredMarkers, setFilteredMarkers] = useState(storePositions);
-  const [visibleMarkers, setVisibleMarkers] = useState<StorePositionsType[]>(
-    []
-  );
-  const [markerState, setMarkerState] = useState(mapState.center);
+
+  const [myMarkerState, setMyMarkerState] = useState(mapState.center);
+  // const [storeMarkerState, setStoreMarkerState] = useState(mapState.center);
   const [isOpenStates, setIsOpenStates] = useState<Record<string, boolean>>(
     Object.fromEntries(storePositions.map((item) => [item.id, false]))
   );
-
+  const [visibleMarkers, setVisibleMarkers] = useState<StorePositionsType[]>(
+    []
+  );
   const { saveState, isSaved, setSaveState, setIsSaved } = useMapStore();
 
   // 컴포넌트 마운트 시 초기화
   useEffect(() => {
     if (isSaved && saveState.center) {
-      setMarkerState(saveState.center);
+      // setStoreMarkerState(saveState.center);
+      setMyMarkerState(saveState.center);
       setMapState((prev) => ({
         ...prev,
         center: saveState.center,
@@ -54,7 +56,8 @@ function MapMultiMarker() {
             center: newCenter,
           }));
 
-          setMarkerState(newCenter);
+          // setStoreMarkerState(newCenter);
+          setMyMarkerState(newCenter);
           getAddressHandle(newCenter.lat, newCenter.lng);
         },
         (err) => {
@@ -114,7 +117,8 @@ function MapMultiMarker() {
       lng: newCenter.getLng(),
     };
 
-    setMarkerState(newPosition);
+    // setStoreMarkerState(newPosition);
+    setMyMarkerState(newPosition);
     setMapState((prev) => ({
       ...prev,
       center: newPosition,
@@ -195,7 +199,7 @@ function MapMultiMarker() {
           width: "100%",
           height: "80vh",
         }}
-        level={3}
+        level={4}
         // onDragStart={() => {
         //   isDragging.current = true;
         //   setVisibleMarkers([]);
@@ -215,34 +219,28 @@ function MapMultiMarker() {
               position={{ lat, lng }}
               image={markerImage}
               clickable={true}
-              onClick={() =>
+              onMouseOver={() =>
                 setIsOpenStates((prev) => ({
                   ...prev,
                   [item.id]: true,
                 }))
               }
+              onMouseOut={() =>
+                setIsOpenStates((prev) => ({
+                  ...prev,
+                  [item.id]: false,
+                }))
+              }
             >
               {isOpenStates[item.id] && (
-                <div style={{ minWidth: "150px" }}>
-                  <img
-                    alt="close"
-                    width="14"
-                    height="13"
-                    src="https://t1.daumcdn.net/localimg/localimages/07/mapjsapi/2x/bt_close.gif"
+                <div style={{ minWidth: "250px", width: "100%" }}>
+                  <div
                     style={{
-                      position: "absolute",
-                      right: "5px",
-                      top: "5px",
-                      cursor: "pointer",
+                      textAlign: "center",
+                      padding: "5px",
+                      color: "#000",
                     }}
-                    onClick={() =>
-                      setIsOpenStates((prev) => ({
-                        ...prev,
-                        [item.id]: false,
-                      }))
-                    }
-                  />
-                  <div style={{ padding: "5px", color: "#000" }}>
+                  >
                     {item.storeName}
                   </div>
                 </div>
@@ -251,7 +249,7 @@ function MapMultiMarker() {
           );
         })}
 
-        {/* <CustomOverlayMap position={markerState} yAnchor={1}>
+        {/* <CustomOverlayMap position={storeMarkerState} yAnchor={1}>
           <div
             style={{
               backgroundColor: "#fff",
@@ -268,9 +266,9 @@ function MapMultiMarker() {
         <button
           className="pointer-btn"
           onClick={() => {
-            setSaveState(markerState);
+            setSaveState(myMarkerState);
             setIsSaved(true);
-            getAddressHandle(markerState.lat, markerState.lng);
+            getAddressHandle(myMarkerState.lat, myMarkerState.lng);
           }}
         >
           위치 저장
@@ -306,3 +304,4 @@ export default MapMultiMarker;
 // 지도 영역에 존재하는 마커 출력
 //  - 마우스 이동 완료 후 마커가 출력되는 형식
 //  - 지도 중심 좌표 주소 변환 후 마커 필터링으로 로딩 속도 향상
+//  - 지도 영역 변경 시 드롭 상태에 마커 생성
