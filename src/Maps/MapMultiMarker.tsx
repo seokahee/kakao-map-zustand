@@ -19,16 +19,16 @@ function MapMultiMarker() {
   const [isOpenStates, setIsOpenStates] = useState<Record<string, boolean>>(
     Object.fromEntries(storePositions.map((item) => [item.id, false]))
   ); // 마커 인포윈도우
-  // const [visibleMarkers, setVisibleMarkers] = useState<StorePositionsType[]>(
-  //   []
-  // ); // 지도 영역에 포함되는 매장
+  const [visibleMarkers, setVisibleMarkers] = useState<StorePositionsType[]>(
+    []
+  ); // 지도 영역에 포함되는 매장
 
   const { saveState, isSaved, setSaveState, setIsSaved } = useMapStore();
 
   //
   // 테스트영역
-  const [visibleMarkers, setVisibleMarkers] =
-    useState<StorePositionsType[]>(storePositions); // 지도 영역에 포함되는 매장
+  // const [visibleMarkers, setVisibleMarkers] =
+  //   useState<StorePositionsType[]>(storePositions); // 지도 영역에 포함되는 매장
   //
 
   // 컴포넌트 마운트 시 초기화
@@ -88,11 +88,11 @@ function MapMultiMarker() {
               address,
             }));
 
-            // const region = address.split(" ")[2];
-            // const markers = storePositions.filter((item) => {
-            //   return item.address.includes(region);
-            // });
-            // setVisibleMarkers(markers);
+            const region = address.split(" ")[2];
+            const markers = storePositions.filter((item) => {
+              return item.address.includes(region);
+            });
+            setVisibleMarkers(markers);
           } else {
             setMapState((prev) => ({
               ...prev,
@@ -173,6 +173,66 @@ function MapMultiMarker() {
     }
   };
 
+  // 마커 클러스터 메모이제이션
+  // const memoizedMarkers = useMemo(() => {
+  //   return visibleMarkers.map((item) => {
+  //     const lat = Number(item.lat);
+  //     const lng = Number(item.lng);
+  //     const markerImage = getMarkerImage(item.machine); // 머신 종류에 따른 이미지 가져오기
+
+  //     return (
+  //       <MapMarker
+  //         key={item.id}
+  //         position={{ lat, lng }}
+  //         image={markerImage}
+  //         clickable={true}
+  //         onMouseOver={() =>
+  //           setIsOpenStates((prev) => ({
+  //             ...prev,
+  //             [item.id]: true,
+  //           }))
+  //         }
+  //         onMouseOut={() =>
+  //           setIsOpenStates((prev) => ({
+  //             ...prev,
+  //             [item.id]: false,
+  //           }))
+  //         }
+  //       >
+  //         {isOpenStates[item.id] && (
+  //           <div style={{ minWidth: "250px", width: "100%" }}>
+  //             <div
+  //               style={{
+  //                 textAlign: "center",
+  //                 padding: "5px",
+  //                 color: "#000",
+  //               }}
+  //             >
+  //               {item.storeName}
+  //             </div>
+  //           </div>
+  //         )}
+  //       </MapMarker>
+  //     );
+  //   });
+  // }, [visibleMarkers, isOpenStates]);
+
+  const clustererStyles = [
+    {
+      minWidth: "20px",
+      height: "30px",
+      padding: "0px 5px",
+      color: "rgb(255, 255, 255)",
+      fontSize: "15px",
+      lineHeight: "30px",
+      textAlign: "center",
+      borderRadius: "30px",
+      backgroundColor: "rgb(50, 108, 249)",
+      whiteSpace: "nowrap",
+      position: "relative",
+    },
+  ];
+
   return (
     <div className="map-wrap">
       <Map
@@ -182,49 +242,55 @@ function MapMultiMarker() {
           width: "100%",
           height: "80vh",
         }}
-        level={13}
+        level={7}
         onDragEnd={(map) => centerChangeHandler(map)}
-        // onBoundsChanged={(map) => onBoundsChangeHandler(map)}
+        onBoundsChanged={(map) => onBoundsChangeHandler(map)}
       >
-        <MarkerClusterer averageCenter={true} minLevel={3}>
+        <MarkerClusterer
+          averageCenter={true}
+          minLevel={3}
+          styles={clustererStyles}
+        >
           {visibleMarkers.map((item) => {
             const lat = Number(item.lat);
             const lng = Number(item.lng);
             const markerImage = getMarkerImage(item.machine); // 머신 종류에 따른 이미지 가져오기
 
             return (
-              <MapMarker
-                key={item.id}
-                position={{ lat, lng }}
-                image={markerImage}
-                clickable={true}
-                onMouseOver={() =>
-                  setIsOpenStates((prev) => ({
-                    ...prev,
-                    [item.id]: true,
-                  }))
-                }
-                onMouseOut={() =>
-                  setIsOpenStates((prev) => ({
-                    ...prev,
-                    [item.id]: false,
-                  }))
-                }
-              >
-                {isOpenStates[item.id] && (
-                  <div style={{ minWidth: "250px", width: "100%" }}>
-                    <div
-                      style={{
-                        textAlign: "center",
-                        padding: "5px",
-                        color: "#000",
-                      }}
-                    >
-                      {item.storeName}
+              <div>
+                <MapMarker
+                  key={item.id}
+                  position={{ lat, lng }}
+                  image={markerImage}
+                  clickable={true}
+                  onMouseOver={() =>
+                    setIsOpenStates((prev) => ({
+                      ...prev,
+                      [item.id]: true,
+                    }))
+                  }
+                  onMouseOut={() =>
+                    setIsOpenStates((prev) => ({
+                      ...prev,
+                      [item.id]: false,
+                    }))
+                  }
+                >
+                  {isOpenStates[item.id] && (
+                    <div style={{ minWidth: "250px", width: "100%" }}>
+                      <div
+                        style={{
+                          textAlign: "center",
+                          padding: "5px",
+                          color: "#000",
+                        }}
+                      >
+                        {item.storeName}
+                      </div>
                     </div>
-                  </div>
-                )}
-              </MapMarker>
+                  )}
+                </MapMarker>
+              </div>
             );
           })}
         </MarkerClusterer>
@@ -256,8 +322,6 @@ function MapMultiMarker() {
 }
 
 export default MapMultiMarker;
-// 마커 겹침 문제
-// 마우스 이동 시 지도 영역에 마커가 들어오면 출력하고싶은데 어떤건 이동중에도 나오고 , 어떤건 내려놔야나온다
 
 // 현재 내 위치 마커 다시 표시하기
 
@@ -268,7 +332,4 @@ export default MapMultiMarker;
 // 드롭시 삭제버튼이 오른쪽에 나오게
 
 // 완료 목록
-// 지도 영역에 존재하는 마커 출력
-//  - 마우스 이동 완료 후 마커가 출력되는 형식
-//  - 지도 중심 좌표 주소 변환 후 마커 필터링으로 로딩 속도 향상
-//  - 지도 영역 변경 시 드롭 상태에 마커 생성
+// - 마커 클러스터 적용
