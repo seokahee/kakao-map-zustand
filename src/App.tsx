@@ -1,11 +1,13 @@
 import "./App.css";
-import MapMultiMarker from "./Maps/MapMultiMarker";
+import DragMap from "./drag/dragMap";
+import MapMultiMarker from "./maps/MapMultiMarker";
 
 function App() {
   return (
     <>
+      <DragMap />
       {/* <Test />  삭제 예정 */}
-      <MapMultiMarker />
+      {/* <MapMultiMarker /> */}
       {/* <MapSingleMarker/> */}
       {/* <MapBasic/>  삭제 예정 */}
     </>
