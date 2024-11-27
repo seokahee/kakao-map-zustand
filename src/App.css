@@ -8,15 +8,20 @@
   background-color: black;
   align-items: center;
 }
-
+.map-container {
+  max-width: 800px;
+  width: 100%;
+  height: 100vh;
+  position: relative;
+}
 .pointer-btn-wrap {
   display: flex;
   justify-content: center;
   gap: 2em;
   position: absolute;
-  top: 15%;
-  right: 2%;
-  z-index: 99;
+  top: 50%;
+  right: 5%;
+  z-index: 3;
   flex-direction: column;
 }
 
@@ -35,30 +40,25 @@
   background-color: black;
   color: #fff;
 }
-/*  */
 
 /* 드래그 메뉴 */
-.menu-wrap {
-  max-width: 500px;
+
+.menu-btn {
   width: 100%;
-  height: 80vh;
+  height: 30%;
+  font-weight: 800;
+  text-align: center;
+  background-color: #d0d0d0;
+}
+
+.menu-wrap {
+  max-width: 800px;
+  width: 100%;
+  height: 90%;
   display: flex;
   background-color: #fff;
   flex-direction: column;
   justify-content: flex-end;
-  align-items: center;
-}
-
-.menu-btn {
-  width: 100%;
-  /* height: 5vh; */
-  height: 75vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  /* border: 2px solid black; */
-  /* background-color: black; */
-  /* border-radius: 10px 10px 0 0; */
 }
 
 .store-info {
@@ -69,12 +69,8 @@
   padding: 15px;
 }
 
-.store-txt {
-}
 .store-img {
-  width: 100px;
-  height: 100px;
+  width: 150px;
+  height: 150px;
   border-radius: 5px;
 }
-/* 드래그 상태가 아닐때 아래로 내려가 있어야하고
-그걸 머리끄댕이 끌어올리듯 드래그로 올리는건데 */

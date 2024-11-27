@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { CustomOverlayMap, Map, MapMarker } from "react-kakao-maps-sdk";
 import { useMapStore } from "../store";
-import { debounce } from "../useDebounce";
+import { debounce } from "../util/useDebounce";
 
 // 단일 마커
 // 위치 저장, 현위치 복귀
