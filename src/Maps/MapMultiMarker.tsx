@@ -25,12 +25,6 @@ function MapMultiMarker() {
 
   const { saveState, isSaved, setSaveState, setIsSaved } = useMapStore();
 
-  //
-  // 테스트영역
-  // const [visibleMarkers, setVisibleMarkers] =
-  //   useState<StorePositionsType[]>(storePositions); // 지도 영역에 포함되는 매장
-  //
-
   // 컴포넌트 마운트 시 초기화
   useEffect(() => {
     if (isSaved && saveState.center) {
