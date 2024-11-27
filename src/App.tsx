@@ -1,16 +1,14 @@
 import "./App.css";
-import MapBasic from "./Maps/MapBasic";
 import MapMultiMarker from "./Maps/MapMultiMarker";
-import Test from "./Maps/Test";
 
 function App() {
   return (
-    <div>
-      {/* <Test /> */}
+    <>
+      {/* <Test />  삭제 예정 */}
       <MapMultiMarker />
       {/* <MapSingleMarker/> */}
-      {/* <MapBasic /> */}
-    </div>
+      {/* <MapBasic/>  삭제 예정 */}
+    </>
   );
 }
 

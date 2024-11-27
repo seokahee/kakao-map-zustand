@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Map, MapMarker, MarkerClusterer } from "react-kakao-maps-sdk";
+import DragMenu from "../DragMenu";
 import { useMapStore } from "../store";
 import { storePositions } from "../storeData";
 import { StorePositionsType } from "../type";
@@ -27,6 +28,7 @@ function MapMultiMarker() {
 
   // 컴포넌트 마운트 시 초기화
   useEffect(() => {
+    // if (window.kakao && window.kakao.maps) {
     if (isSaved && saveState.center) {
       setMyMarkerState(saveState.center);
       setMapState((prev) => ({
@@ -37,6 +39,7 @@ function MapMultiMarker() {
     } else {
       getCurrentAddress();
     }
+    // }
   }, []);
 
   // 현재 위치 가져오기
@@ -226,7 +229,9 @@ function MapMultiMarker() {
       position: "relative",
     },
   ];
-
+  const onDragEnd = () => {
+    console.log("드롭!!!!!!!!!!!!!!!!!!!!!!!!!");
+  };
   return (
     <div className="map-wrap">
       <Map
@@ -311,19 +316,9 @@ function MapMultiMarker() {
           현재 위치
         </button>
       </div>
+      <DragMenu />
     </div>
   );
 }
 
 export default MapMultiMarker;
-
-// 현재 내 위치 마커 다시 표시하기
-
-// 클러스터 (영역 분리 확실하게 구분되도록 작업 ex 다방)
-
-// 그 외
-// 드롭슬라이드 메뉴
-// 드롭시 삭제버튼이 오른쪽에 나오게
-
-// 완료 목록
-// - 마커 클러스터 적용

@@ -1,3 +1,4 @@
+/* 카카오 지도 */
 .map-wrap {
   width: 100%;
   height: 100vh;
@@ -9,23 +10,71 @@
 }
 
 .pointer-btn-wrap {
-  width: 100%;
   display: flex;
-  margin-top: 2em;
   justify-content: center;
-  gap: 5em;
+  gap: 2em;
+  position: absolute;
+  top: 15%;
+  right: 2%;
+  z-index: 99;
+  flex-direction: column;
 }
 
 .pointer-btn {
   max-width: 200px;
   width: 100%;
   padding: 0.8em;
-  border-radius: 10px;
+  border-radius: 20px;
   font-size: 1em;
   border: none;
   cursor: pointer;
+  box-shadow: 1px 1px 5px 0px black;
 }
 
 .pointer-btn:hover {
-  background-color: yellow;
+  background-color: black;
+  color: #fff;
 }
+/*  */
+
+/* 드래그 메뉴 */
+.menu-wrap {
+  max-width: 500px;
+  width: 100%;
+  height: 80vh;
+  display: flex;
+  background-color: #fff;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.menu-btn {
+  width: 100%;
+  /* height: 5vh; */
+  height: 75vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  /* border: 2px solid black; */
+  /* background-color: black; */
+  /* border-radius: 10px 10px 0 0; */
+}
+
+.store-info {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  padding: 15px;
+}
+
+.store-txt {
+}
+.store-img {
+  width: 100px;
+  height: 100px;
+  border-radius: 5px;
+}
+/* 드래그 상태가 아닐때 아래로 내려가 있어야하고
+그걸 머리끄댕이 끌어올리듯 드래그로 올리는건데 */
