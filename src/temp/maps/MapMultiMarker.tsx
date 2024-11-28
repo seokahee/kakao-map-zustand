@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
-import { useMapStore } from "../store";
-import { storePositions } from "../storeData";
-import { StorePositionsType } from "../types/type";
-import { debounce } from "../util/useDebounce";
+import { Map, MapMarker, MarkerClusterer } from "react-kakao-maps-sdk";
+import DragMenu from "../../bottomSheet/BottomSheet";
+import { useMapStore } from "../../store";
+import { storePositions } from "../../storeData";
+import { StorePositionsType } from "../../types/type";
+import { debounce } from "../../util/useDebounce";
 
-// 지도 상태와 관련된 모든 로직 관리
-export const useMap = () => {
+function MapMultiMarker() {
   const [mapState, setMapState] = useState({
     center: {
       lat: 33.450701,
@@ -27,6 +28,7 @@ export const useMap = () => {
 
   // 컴포넌트 마운트 시 초기화
   useEffect(() => {
+    // if (window.kakao && window.kakao.maps) {
     if (isSaved && saveState.center) {
       setMyMarkerState(saveState.center);
       setMapState((prev) => ({
@@ -37,6 +39,7 @@ export const useMap = () => {
     } else {
       getCurrentAddress();
     }
+    // }
   }, []);
 
   // 현재 위치 가져오기
@@ -95,7 +98,7 @@ export const useMap = () => {
           }
         });
       }, 300),
-    []
+    [isSaved]
   );
 
   // 중심좌표 구하기
@@ -183,20 +186,93 @@ export const useMap = () => {
     },
   ];
 
-  return {
-    myMarkerState,
-    isOpenStates,
-    setIsOpenStates,
-    visibleMarkers,
-    saveState,
-    isSaved,
-    setSaveState,
-    setIsSaved,
-    getCurrentAddress,
-    getAddressHandle,
-    centerChangeHandler,
-    onBoundsChangeHandler,
-    getMarkerImage,
-    clustererStyles,
-  };
-};
+  return (
+    <div className="map-wrap">
+      <Map
+        center={isSaved ? saveState.center : mapState.center}
+        style={{
+          // maxWidth: "800px",
+          width: "100%",
+          height: "80vh",
+        }}
+        level={7}
+        onDragEnd={(map) => centerChangeHandler(map)}
+        onBoundsChanged={(map) => onBoundsChangeHandler(map)}
+      >
+        <MarkerClusterer
+          averageCenter={true}
+          minLevel={3}
+          styles={clustererStyles}
+        >
+          {visibleMarkers.map((item) => {
+            const lat = Number(item.lat);
+            const lng = Number(item.lng);
+            const markerImage = getMarkerImage(item.machine); // 머신 종류에 따른 이미지 가져오기
+
+            return (
+              <div>
+                <MapMarker
+                  key={item.id}
+                  position={{ lat, lng }}
+                  image={markerImage}
+                  clickable={true}
+                  onMouseOver={() =>
+                    setIsOpenStates((prev) => ({
+                      ...prev,
+                      [item.id]: true,
+                    }))
+                  }
+                  onMouseOut={() =>
+                    setIsOpenStates((prev) => ({
+                      ...prev,
+                      [item.id]: false,
+                    }))
+                  }
+                >
+                  {isOpenStates[item.id] && (
+                    <div style={{ minWidth: "250px", width: "100%" }}>
+                      <div
+                        style={{
+                          textAlign: "center",
+                          padding: "5px",
+                          color: "#000",
+                        }}
+                      >
+                        {item.storeName}
+                      </div>
+                    </div>
+                  )}
+                </MapMarker>
+              </div>
+            );
+          })}
+        </MarkerClusterer>
+      </Map>
+
+      <div className="pointer-btn-wrap">
+        <button
+          className="pointer-btn"
+          onClick={() => {
+            setSaveState(myMarkerState);
+            setIsSaved(true);
+            getAddressHandle(myMarkerState.lat, myMarkerState.lng);
+          }}
+        >
+          위치 저장
+        </button>
+        <button
+          className="pointer-btn"
+          onClick={() => {
+            setIsSaved(false);
+            getCurrentAddress();
+          }}
+        >
+          현재 위치
+        </button>
+      </div>
+      <DragMenu />
+    </div>
+  );
+}
+
+export default MapMultiMarker;

@@ -1,15 +1,12 @@
 import "./App.css";
-import DragMap from "./drag/dragMap";
-import MapMultiMarker from "./maps/MapMultiMarker";
+import BottomSheetMap from "./bottomSheet/BottomSheetMap";
 
 function App() {
   return (
     <>
-      <DragMap />
-      {/* <Test />  삭제 예정 */}
+      <BottomSheetMap />
       {/* <MapMultiMarker /> */}
       {/* <MapSingleMarker/> */}
-      {/* <MapBasic/>  삭제 예정 */}
     </>
   );
 }

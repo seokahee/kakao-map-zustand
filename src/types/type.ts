@@ -18,10 +18,35 @@ export type MapType = {
   errMsg: string;
 };
 
-// 그 외
-// 드롭슬라이드 메뉴
-// 드롭시 삭제버튼이 오른쪽에 나오게
+export type BottomSheetMetrics = {
+  touchStart: {
+    sheetY: number;
+    touchY: number;
+  };
+  touchMove: {
+    prevTouchY?: number;
+    movingDirection: "none" | "down" | "up";
+  };
+  isContentAreaTouched: boolean;
+};
 
-// 완료 목록
-// - 마커 클러스터 적용
-// - 카카오 지도 함수 유틸 파일로 분리
+export type MapStoreMarkerPropsType = {
+  item: StorePositionsType;
+  isOpenStates: Record<string, boolean>;
+  setIsOpenStates: React.Dispatch<
+    React.SetStateAction<Record<string, boolean>>
+  >; // 상태 업데이트 함수
+  getMarkerImage: (machineType: string) => {
+    src: string;
+    size: { width: number; height: number };
+    options: { offset: { x: number; y: number } };
+  };
+};
+
+export type MapPositionBtnsProps = {
+  myMarkerState: LatLngType;
+  setSaveState: (center: { lat: number; lng: number }) => void;
+  setIsSaved: (isSaved: boolean) => void;
+  getAddressHandle: (lat: number, lng: number) => void;
+  getCurrentAddress: () => void;
+};

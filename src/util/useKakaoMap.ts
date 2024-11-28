@@ -1,12 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
-import { Map, MapMarker, MarkerClusterer } from "react-kakao-maps-sdk";
-import DragMenu from "../DragMenu";
-import { useMapStore } from "../store";
+import { useMapStore, useStoreMarkersStore } from "../store";
 import { storePositions } from "../storeData";
 import { StorePositionsType } from "../types/type";
-import { debounce } from "../util/useDebounce";
+import { debounce } from "./useDebounce";
 
-function MapMultiMarker() {
+// 지도 상태와 관련된 모든 로직 관리
+export const useKakaoMap = () => {
   const [mapState, setMapState] = useState({
     center: {
       lat: 33.450701,
@@ -20,15 +19,16 @@ function MapMultiMarker() {
   const [isOpenStates, setIsOpenStates] = useState<Record<string, boolean>>(
     Object.fromEntries(storePositions.map((item) => [item.id, false]))
   ); // 마커 인포윈도우
-  const [visibleMarkers, setVisibleMarkers] = useState<StorePositionsType[]>(
-    []
-  ); // 지도 영역에 포함되는 매장
+
+  // const [visibleMarkers, setVisibleMarkers] = useState<StorePositionsType[]>(
+  //   []
+  // ); // 지도 영역에 포함되는 매장
 
   const { saveState, isSaved, setSaveState, setIsSaved } = useMapStore();
+  const { storeMarkers, setStoreMarkers } = useStoreMarkersStore(); // 지도 영역에 포함되는 매장
 
   // 컴포넌트 마운트 시 초기화
   useEffect(() => {
-    // if (window.kakao && window.kakao.maps) {
     if (isSaved && saveState.center) {
       setMyMarkerState(saveState.center);
       setMapState((prev) => ({
@@ -39,7 +39,6 @@ function MapMultiMarker() {
     } else {
       getCurrentAddress();
     }
-    // }
   }, []);
 
   // 현재 위치 가져오기
@@ -89,7 +88,8 @@ function MapMultiMarker() {
             const markers = storePositions.filter((item) => {
               return item.address.includes(region);
             });
-            setVisibleMarkers(markers);
+
+            setStoreMarkers(markers);
           } else {
             setMapState((prev) => ({
               ...prev,
@@ -98,7 +98,7 @@ function MapMultiMarker() {
           }
         });
       }, 300),
-    [isSaved]
+    []
   );
 
   // 중심좌표 구하기
@@ -123,7 +123,7 @@ function MapMultiMarker() {
   const onBoundsChangeHandler = (map: any) => {
     const bounds = map.getBounds(); // 지도 영역값 가져오기
 
-    const filteredMarkers = visibleMarkers.filter((marker) => {
+    const filteredMarkers = storeMarkers.filter((marker) => {
       const markerLatLng = new kakao.maps.LatLng(
         Number(marker.lat),
         Number(marker.lng)
@@ -131,7 +131,7 @@ function MapMultiMarker() {
       return bounds.contain(markerLatLng); // 지도 경계 내 포함 여부 확인
     });
 
-    setVisibleMarkers(filteredMarkers);
+    setStoreMarkers(filteredMarkers);
   };
 
   // 머신 마커 이미지 설정
@@ -185,96 +185,21 @@ function MapMultiMarker() {
       position: "relative",
     },
   ];
-  const onDragEnd = () => {
-    console.log("드롭!!!!!!!!!!!!!!!!!!!!!!!!!");
+
+  return {
+    myMarkerState,
+    isOpenStates,
+    setIsOpenStates,
+    storeMarkers,
+    saveState,
+    isSaved,
+    setSaveState,
+    setIsSaved,
+    getCurrentAddress,
+    getAddressHandle,
+    centerChangeHandler,
+    onBoundsChangeHandler,
+    getMarkerImage,
+    clustererStyles,
   };
-  return (
-    <div className="map-wrap">
-      <Map
-        center={isSaved ? saveState.center : mapState.center}
-        style={{
-          // maxWidth: "800px",
-          width: "100%",
-          height: "80vh",
-        }}
-        level={7}
-        onDragEnd={(map) => centerChangeHandler(map)}
-        onBoundsChanged={(map) => onBoundsChangeHandler(map)}
-      >
-        <MarkerClusterer
-          averageCenter={true}
-          minLevel={3}
-          styles={clustererStyles}
-        >
-          {visibleMarkers.map((item) => {
-            const lat = Number(item.lat);
-            const lng = Number(item.lng);
-            const markerImage = getMarkerImage(item.machine); // 머신 종류에 따른 이미지 가져오기
-
-            return (
-              <div>
-                <MapMarker
-                  key={item.id}
-                  position={{ lat, lng }}
-                  image={markerImage}
-                  clickable={true}
-                  onMouseOver={() =>
-                    setIsOpenStates((prev) => ({
-                      ...prev,
-                      [item.id]: true,
-                    }))
-                  }
-                  onMouseOut={() =>
-                    setIsOpenStates((prev) => ({
-                      ...prev,
-                      [item.id]: false,
-                    }))
-                  }
-                >
-                  {isOpenStates[item.id] && (
-                    <div style={{ minWidth: "250px", width: "100%" }}>
-                      <div
-                        style={{
-                          textAlign: "center",
-                          padding: "5px",
-                          color: "#000",
-                        }}
-                      >
-                        {item.storeName}
-                      </div>
-                    </div>
-                  )}
-                </MapMarker>
-              </div>
-            );
-          })}
-        </MarkerClusterer>
-      </Map>
-
-      <div className="pointer-btn-wrap">
-        <button
-          className="pointer-btn"
-          onClick={() => {
-            setSaveState(myMarkerState);
-            setIsSaved(true);
-            getAddressHandle(myMarkerState.lat, myMarkerState.lng);
-          }}
-        >
-          위치 저장
-        </button>
-        <button
-          className="pointer-btn"
-          onClick={() => {
-            setIsSaved(false);
-            getCurrentAddress();
-          }}
-        >
-          현재 위치
-        </button>
-      </div>
-      <DragMenu />
-    </div>
-  );
-}
-
-export default MapMultiMarker;
+};

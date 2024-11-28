@@ -1,17 +1,24 @@
+body {
+  -ms-overflow-style: none;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
 /* 카카오 지도 */
 .map-wrap {
   width: 100%;
   height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   background-color: black;
   align-items: center;
+  justify-content: space-evenly;
 }
 .map-container {
   max-width: 800px;
   width: 100%;
-  height: 100vh;
   position: relative;
 }
 .pointer-btn-wrap {
@@ -21,7 +28,7 @@
   position: absolute;
   top: 5%;
   right: 5%;
-  z-index: 3;
+  z-index: 1;
   flex-direction: column;
 }
 
@@ -34,46 +41,104 @@
   border: none;
   cursor: pointer;
   box-shadow: 1px 1px 5px 0px black;
+  background: linear-gradient(
+    359.26deg,
+    #3c41c7 0.02%,
+    #3742b2 83.23%,
+    #3642ae 98.76%
+  );
+  color: #cccccc;
 }
 
 .pointer-btn:hover {
-  background-color: black;
-  color: #fff;
+  background: black;
+  color: #cccccc;
 }
 
-/* 드래그 메뉴 */
+/* 바텀시트 */
 
-.menu-btn {
-  width: 100%;
-  height: 5%;
-  line-height: 3.5;
-  text-align: center;
-  background-color: #d0d0d0;
-}
-
-.menu-wrap {
-  max-width: 800px;
-  width: 100%;
-  height: 90%;
+.bottom-sheet-wrap {
+  width: 800px;
+  height: 100%;
   display: flex;
-  background-color: #fff;
   flex-direction: column;
-  justify-content: flex-end;
-  z-index: 99;
-  position: absolute;
-  bottom: 0%;
+  position: fixed;
+  top: calc(100% - 50px); /* 시트가 얼마나 보일지 */
+  z-index: 1;
+  border-radius: 12px 12px 0 0;
+  background: linear-gradient(
+    359.26deg,
+    #3c41c7 0.02%,
+    #3742b2 83.23%,
+    #3642ae 98.76%
+  );
+  transition: transform 600ms linear; /* 애니메이션 */
 }
 
+/* .contents-wrap {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+} */
+
+.contents {
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  max-height: calc(100vh - 200px);
+}
 .store-info {
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 10px;
   padding: 15px;
+  border-bottom: 1px solid #ccc;
 }
 
 .store-img {
   width: 150px;
   height: 150px;
   border-radius: 5px;
+  object-fit: cover;
 }
+
+/* 바텀시트 버튼 */
+
+.btn-wrap {
+  height: 50px;
+  border-top-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  position: relative;
+  padding-top: 12px;
+  padding-bottom: 4px;
+}
+
+.btn-handle {
+  width: 40%;
+  height: 40%;
+  border-radius: 10px;
+  background-color: #cccccc;
+  margin: auto;
+  cursor: pointer;
+}
+
+.btn-handle:hover {
+  background: black;
+}
+
+/* 그 외
+드롭슬라이드 메뉴
+드롭시 삭제버튼이 오른쪽에 나오게
+
+완료 목록
+- 마커 클러스터 적용
+- 카카오 지도 함수 유틸 파일로 분리
+
+드래그앤드롭 메뉴바
+리스트 내에서 드래그할경우 삭제 버튼이나온다
+
+드래그를 3등분으로 쪼개? 
+
+
+
+*/
