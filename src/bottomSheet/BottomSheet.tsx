@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import useBottomSheet from "../util/useBottomSheet ";
-import BottomSheetBtn from "./BottomSheetBtn";
+import BottomSheetHeader from "./BottomSheetHeader";
 import BottomSheetContents from "./BottomSheetContents";
 
 function BottomSheet() {
@@ -19,6 +19,13 @@ function BottomSheet() {
     console.log("드래그 종료! 위치:", info.point.y);
   };
 
+  const onDragStart = (
+    e: MouseEvent | TouchEvent | PointerEvent,
+    info: any
+  ) => {
+    console.log("드래그! 위치:", info.point.y);
+  };
+
   return (
     <motion.div
       className="bottom-sheet-wrap"
@@ -30,15 +37,13 @@ function BottomSheet() {
       initial="closed"
       animate="closed"
       onDragEnd={(e, info) => onDragEnd(e, info)}
+      onDragStart={(e, info) => onDragStart(e, info)}
     >
-      <BottomSheetBtn />
+      <BottomSheetHeader />
       <div className="contents-wrap">
         <div ref={content} className="contents">
           <BottomSheetContents />
         </div>
-        <div
-          style={{ background: "black", width: "100%", height: "100%" }}
-        ></div>
       </div>
     </motion.div>
   );

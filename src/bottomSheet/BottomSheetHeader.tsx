@@ -1,4 +1,4 @@
-function BottomSheetBtn() {
+function BottomSheetHeader() {
   return (
     <div className="btn-wrap">
       <div className="btn-handle"></div>
@@ -6,4 +6,4 @@ function BottomSheetBtn() {
   );
 }
 
-export default BottomSheetBtn;
+export default BottomSheetHeader;

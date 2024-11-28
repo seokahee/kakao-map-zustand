@@ -1,4 +1,8 @@
 body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+
   -ms-overflow-style: none;
 }
 
@@ -8,6 +12,9 @@ body {
 
 /* 카카오 지도 */
 .map-wrap {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100vh;
   display: flex;
@@ -58,8 +65,9 @@ body {
 /* 바텀시트 */
 
 .bottom-sheet-wrap {
-  width: 800px;
+  width: 760px;
   height: 100%;
+  padding: 0 20px;
   display: flex;
   flex-direction: column;
   position: fixed;
@@ -72,14 +80,14 @@ body {
     #3742b2 83.23%,
     #3642ae 98.76%
   );
-  transition: transform 600ms linear; /* 애니메이션 */
+  transition: transform 600ms linear;
 }
 
-/* .contents-wrap {
+.contents-wrap {
   display: flex;
   flex-direction: row;
   justify-content: center;
-} */
+}
 
 .contents {
   overflow: auto;
@@ -91,7 +99,6 @@ body {
   flex-direction: row;
   align-items: center;
   gap: 10px;
-  padding: 15px;
   border-bottom: 1px solid #ccc;
 }
 
@@ -101,8 +108,6 @@ body {
   border-radius: 5px;
   object-fit: cover;
 }
-
-/* 바텀시트 버튼 */
 
 .btn-wrap {
   height: 50px;
@@ -126,6 +131,12 @@ body {
   background: black;
 }
 
+/* .content-list-menu {
+  background: #ccc;
+  border-bottom: 1px solid #fff;
+  width: 40%;
+  height: 100%;
+} */
 /* 그 외
 드롭슬라이드 메뉴
 드롭시 삭제버튼이 오른쪽에 나오게
