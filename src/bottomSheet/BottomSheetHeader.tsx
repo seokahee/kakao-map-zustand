@@ -1,7 +1,7 @@
 function BottomSheetHeader() {
   return (
-    <div className="btn-wrap">
-      <div className="btn-handle"></div>
+    <div className="sheet-handle-wrap">
+      <div className="sheet-btn-handle"></div>
     </div>
   );
 }

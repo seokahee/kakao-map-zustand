@@ -1,18 +1,24 @@
-body {
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 
   -ms-overflow-style: none;
 }
-
 ::-webkit-scrollbar {
   display: none;
 }
 
 /* 카카오 지도 */
-.map-wrap {
-  position: absolute;
+.wrap {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: black;
+
+  /* position: absolute;
   top: 0;
   left: 0;
   width: 100%;
@@ -21,13 +27,24 @@ body {
   flex-direction: column;
   background-color: black;
   align-items: center;
-  justify-content: space-evenly;
+  justify-content: space-evenly; */
 }
-.map-container {
-  max-width: 800px;
+/* .map-wrap {
   width: 100%;
-  position: relative;
+
+   position: relative; 
+} */
+.map {
+  width: 100%;
+  height: 90%;
 }
+
+.info-window-div {
+  max-width: 300px;
+  padding: 0 5px;
+  white-space: nowrap;
+}
+
 .pointer-btn-wrap {
   display: flex;
   justify-content: center;
@@ -54,7 +71,7 @@ body {
     #3742b2 83.23%,
     #3642ae 98.76%
   );
-  color: #cccccc;
+  color: #ffffff;
 }
 
 .pointer-btn:hover {
@@ -63,15 +80,13 @@ body {
 }
 
 /* 바텀시트 */
-
-.bottom-sheet-wrap {
-  width: 760px;
-  height: 100%;
+.sheet-wrap {
+  width: 100%;
   padding: 0 20px;
   display: flex;
   flex-direction: column;
   position: fixed;
-  top: calc(100% - 50px); /* 시트가 얼마나 보일지 */
+  /* top: calc(100% - 50px); 시트가 얼마나 보일지 */
   z-index: 1;
   border-radius: 12px 12px 0 0;
   background: linear-gradient(
@@ -80,63 +95,63 @@ body {
     #3742b2 83.23%,
     #3642ae 98.76%
   );
-  transition: transform 600ms linear;
+  /* transition: transform 600ms linear; */
 }
 
-.contents-wrap {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-}
-
-.contents {
-  overflow: auto;
-  -webkit-overflow-scrolling: touch;
-  max-height: calc(100vh - 200px);
-}
-.store-info {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 10px;
-  border-bottom: 1px solid #ccc;
-}
-
-.store-img {
-  width: 150px;
-  height: 150px;
-  border-radius: 5px;
-  object-fit: cover;
-}
-
-.btn-wrap {
+.sheet-handle-wrap {
   height: 50px;
-  border-top-left-radius: 12px;
-  border-bottom-right-radius: 12px;
-  position: relative;
-  padding-top: 12px;
-  padding-bottom: 4px;
+  padding: 15px 0;
 }
 
-.btn-handle {
-  width: 40%;
-  height: 40%;
+.sheet-btn-handle {
+  width: 20%;
+  height: 30%;
   border-radius: 10px;
   background-color: #cccccc;
   margin: auto;
   cursor: pointer;
 }
 
-.btn-handle:hover {
-  background: black;
+.sheet-btn-handle:active {
+  background: #090909;
 }
 
-/* .content-list-menu {
+.sheet-content-wrap {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid #fff;
+  justify-content: space-between;
+}
+
+.content-body {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 2em;
+  overflow: auto;
+  max-height: calc(
+    100vh - 150px
+  ); /* 최대 높이를 설정하여, 그 이상일 경우 스크롤이 생기도록 함 */
+}
+
+.content-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  color: #ccc;
+  font-weight: 600;
+}
+
+.sheet-content-btn {
   background: #ccc;
   border-bottom: 1px solid #fff;
   width: 40%;
-  height: 100%;
-} */
+  padding: 3em;
+}
+
 /* 그 외
 드롭슬라이드 메뉴
 드롭시 삭제버튼이 오른쪽에 나오게

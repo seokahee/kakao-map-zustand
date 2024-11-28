@@ -23,42 +23,39 @@ function BottomSheetMap() {
   } = useKakaoMap(); // 카카오 맵
 
   return (
-    <div className="map-wrap">
-      <div className="map-container">
-        <Map
-          center={isSaved ? saveState.center : myMarkerState}
-          style={{
-            width: "100%",
-            height: "80vh",
-          }}
-          level={7}
-          onDragEnd={(map) => centerChangeHandler(map)}
-          onBoundsChanged={(map) => onBoundsChangeHandler(map)}
+    <div className="wrap">
+      {/* <div className="map-wrap"> */}
+      <Map
+        center={isSaved ? saveState.center : myMarkerState}
+        level={7}
+        onDragEnd={(map) => centerChangeHandler(map)}
+        onBoundsChanged={(map) => onBoundsChangeHandler(map)}
+        className="map"
+      >
+        <MarkerClusterer
+          averageCenter={true}
+          minLevel={3}
+          styles={clustererStyles}
         >
-          <MarkerClusterer
-            averageCenter={true}
-            minLevel={3}
-            styles={clustererStyles}
-          >
-            {storeMarkers.map((item) => (
-              <MapStoreMarker
-                key={item.id}
-                item={item}
-                isOpenStates={isOpenStates}
-                setIsOpenStates={setIsOpenStates}
-                getMarkerImage={getMarkerImage}
-              />
-            ))}
-          </MarkerClusterer>
-        </Map>
-        <MapPositionBtns
-          myMarkerState={myMarkerState}
-          setSaveState={setSaveState}
-          setIsSaved={setIsSaved}
-          getAddressHandle={getAddressHandle}
-          getCurrentAddress={getCurrentAddress}
-        />
-      </div>
+          {storeMarkers.map((item) => (
+            <MapStoreMarker
+              key={item.id}
+              item={item}
+              isOpenStates={isOpenStates}
+              setIsOpenStates={setIsOpenStates}
+              getMarkerImage={getMarkerImage}
+            />
+          ))}
+        </MarkerClusterer>
+      </Map>
+      <MapPositionBtns
+        myMarkerState={myMarkerState}
+        setSaveState={setSaveState}
+        setIsSaved={setIsSaved}
+        getAddressHandle={getAddressHandle}
+        getCurrentAddress={getCurrentAddress}
+      />
+      {/* </div> */}
       <BottomSheet />
     </div>
   );

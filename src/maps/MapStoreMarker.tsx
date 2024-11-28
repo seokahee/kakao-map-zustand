@@ -9,7 +9,7 @@ function MapStoreMarker({
 }: MapStoreMarkerPropsType) {
   const lat = Number(item.lat);
   const lng = Number(item.lng);
-  const markerImage = getMarkerImage(item.machine); // 머신 종류에 따른 이미지 가져오기
+  const markerImage = getMarkerImage(item.machine);
 
   return (
     <div>
@@ -32,17 +32,7 @@ function MapStoreMarker({
         }
       >
         {isOpenStates[item.id] && (
-          <div style={{ minWidth: "250px", width: "100%" }}>
-            <div
-              style={{
-                textAlign: "center",
-                padding: "5px",
-                color: "#000",
-              }}
-            >
-              {item.storeName}
-            </div>
-          </div>
+          <div className="info-window-div">{item.storeName}</div>
         )}
       </MapMarker>
     </div>

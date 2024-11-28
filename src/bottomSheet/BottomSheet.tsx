@@ -1,47 +1,30 @@
 import { motion } from "framer-motion";
-import useBottomSheet from "../util/useBottomSheet ";
-import BottomSheetHeader from "./BottomSheetHeader";
 import BottomSheetContents from "./BottomSheetContents";
+import BottomSheetHeader from "./BottomSheetHeader";
+import { useEffect, useState } from "react";
 
 function BottomSheet() {
-  const { sheet, content } = useBottomSheet();
+  const [dragConstraints, setDragConstraints] = useState({ top: 0, bottom: 0 });
 
-  // const bottomSheetVariants = {
-  //   closed: { y: 0 }, // 기본 닫힌 상태
-  //   open: { y: -window.innerHeight * 0.9 }, // 열렸을때 위치
-  // };
-  const onDragEnd = (e: MouseEvent | TouchEvent | PointerEvent, info: any) => {
-    if (info.point.y < window.innerHeight / 2) {
-      sheet.current!.style.transform = "translateY(-300px)";
-    } else {
-      sheet.current!.style.transform = "translateY(0)";
-    }
-    console.log("드래그 종료! 위치:", info.point.y);
-  };
+  // 컴포넌트 마운트 시 드래그 제약조건 실행
+  useEffect(() => {
+    // 드래그 가능한 범위(제약조건) 설정 함수
 
-  const onDragStart = (
-    e: MouseEvent | TouchEvent | PointerEvent,
-    info: any
-  ) => {
-    console.log("드래그! 위치:", info.point.y);
-  };
+    const updataConstraint = () => {
+      setDragConstraints({ top: 10, bottom: window.innerHeight - 50 });
+    };
+  }, []);
 
   return (
     <motion.div
-      className="bottom-sheet-wrap"
-      ref={sheet}
+      className="sheet-wrap"
       drag="y"
-      dragConstraints={{ top: -window.innerHeight * 0.8, bottom: 0 }} // 위, 아래 제한
-      dragElastic={1} // 드래그 탄성 효과
-      // variants={bottomSheetVariants}
-      initial="closed"
-      animate="closed"
-      onDragEnd={(e, info) => onDragEnd(e, info)}
-      onDragStart={(e, info) => onDragStart(e, info)}
+      dragMomentum={false}
+      dragConstraints={{ top: 50, bottom: window.innerHeight - 10 }}
     >
       <BottomSheetHeader />
-      <div className="contents-wrap">
-        <div ref={content} className="contents">
+      <div className="sheet-contents-wrap">
+        <div className="contents-body">
           <BottomSheetContents />
         </div>
       </div>

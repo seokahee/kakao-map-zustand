@@ -172,17 +172,16 @@ export const useKakaoMap = () => {
 
   const clustererStyles = [
     {
-      minWidth: "20px",
+      minWidth: "30px",
       height: "30px",
-      padding: "0px 5px",
+      padding: "0px 0.3em",
       color: "rgb(255, 255, 255)",
-      fontSize: "15px",
       lineHeight: "30px",
       textAlign: "center",
-      borderRadius: "30px",
+      borderRadius: "50%",
       backgroundColor: "rgb(50, 108, 249)",
       whiteSpace: "nowrap",
-      position: "relative",
+      // position: "relative",
     },
   ];
 
