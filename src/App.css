@@ -95,12 +95,13 @@
     #3742b2 83.23%,
     #3642ae 98.76%
   );
-  /* transition: transform 600ms linear; */
+  /* transition: transform 100ms linear; */
 }
 
 .sheet-handle-wrap {
   height: 50px;
   padding: 15px 0;
+  cursor: pointer;
 }
 
 .sheet-btn-handle {
@@ -109,14 +110,20 @@
   border-radius: 10px;
   background-color: #cccccc;
   margin: auto;
-  cursor: pointer;
 }
 
-.sheet-btn-handle:active {
+.sheet-handle-wrap:active .sheet-btn-handle {
   background: #090909;
 }
 
 .sheet-content-wrap {
+  overflow: auto;
+  max-height: calc(
+    100vh - 100px
+  ); /* 최대 높이를 설정하여, 그 이상일 경우 스크롤이 생기도록 함 */
+}
+
+.sheet-content-body {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -125,16 +132,12 @@
   justify-content: space-between;
 }
 
-.content-body {
+.sheet-content {
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
   gap: 2em;
-  overflow: auto;
-  max-height: calc(
-    100vh - 150px
-  ); /* 최대 높이를 설정하여, 그 이상일 경우 스크롤이 생기도록 함 */
 }
 
 .content-info {
@@ -152,19 +155,9 @@
   padding: 3em;
 }
 
-/* 그 외
-드롭슬라이드 메뉴
-드롭시 삭제버튼이 오른쪽에 나오게
-
-완료 목록
-- 마커 클러스터 적용
-- 카카오 지도 함수 유틸 파일로 분리
-
-드래그앤드롭 메뉴바
-리스트 내에서 드래그할경우 삭제 버튼이나온다
-
-드래그를 3등분으로 쪼개? 
-
-
-
-*/
+/* 
+바텀시트높이이상 올라가지못하게
+버튼이 3/1이상 노출되면 노출 상태 고정
+반대로 밀면 다시 원위치
+위아래 드래그로 인덱스변경
+바텀시트를 벗어나지않게 */
