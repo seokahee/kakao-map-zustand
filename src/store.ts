@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { StorePositionsType } from "./types/type";
 
 type MapType = {
   saveState: {
@@ -42,3 +43,17 @@ export const useMapStore = create(
     }
   )
 );
+
+type StoreMarkerType = {
+  storeMarkers: StorePositionsType[];
+  setStoreMarkers: (storeMarkers: StorePositionsType[]) => void;
+};
+
+export const useStoreMarkersStore = create<StoreMarkerType>((set) => ({
+  storeMarkers: [],
+  setStoreMarkers: (storeMarkers: StorePositionsType[]) => {
+    set({
+      storeMarkers,
+    });
+  },
+}));

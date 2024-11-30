@@ -1,13 +1,13 @@
 import "./App.css";
-import MapMultiMarker from "./Maps/MapMultiMarker";
+import BottomSheetMap from "./bottomSheet/BottomSheetMap";
 
 function App() {
   return (
-    <div>
-      <MapMultiMarker />
+    <>
+      <BottomSheetMap />
+      {/* <MapMultiMarker /> */}
       {/* <MapSingleMarker/> */}
-      {/* <MapBasic/> */}
-    </div>
+    </>
   );
 }
 

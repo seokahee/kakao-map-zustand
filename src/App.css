@@ -1,68 +1,164 @@
-.map-wrap {
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+
+  -ms-overflow-style: none;
+}
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* 카카오 지도 */
+.wrap {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: black;
+
+  /* position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   background-color: black;
   align-items: center;
+  justify-content: space-evenly; */
+}
+/* .map-wrap {
+  width: 100%;
+
+   position: relative; 
+} */
+.map {
+  width: 100%;
+  height: 90%;
+}
+
+.info-window-div {
+  max-width: 300px;
+  padding: 0 5px;
+  white-space: nowrap;
 }
 
 .pointer-btn-wrap {
-  width: 100%;
   display: flex;
-  margin-top: 2em;
   justify-content: center;
-  gap: 10em;
+  gap: 2em;
+  position: absolute;
+  top: 5%;
+  right: 5%;
+  z-index: 1;
+  flex-direction: column;
 }
 
 .pointer-btn {
   max-width: 200px;
   width: 100%;
   padding: 0.8em;
-  border-radius: 10px;
+  border-radius: 20px;
   font-size: 1em;
   border: none;
   cursor: pointer;
-}
-
-/* import React, { useState } from "react";
-import { Map, CustomOverlayMap } from "react-kakao-maps-sdk";
-
-const overlayData = [
-  { id: 1, position: { lat: 127.0247075, lng: 37.5067847499904 }, content: "첫 번째 오버레이" },
-  { id: 2, position: { lat: 126.687635393482, lng: 36.5603132409155 }, content: "두 번째 오버레이" },
-  { id: 3, position: { lat: 127.054181311682, lng: 37.0816120999622 }, content: "두 번째 오버레이" },
-  { id: 4, position: { lat: 1127.455904596905, lng: 36.3056783448982 }, content: "두 번째 오버레이" },
-  { id: 5, position: { lat: 126.687635393482, lng: 36.5603132409155 }, content: "두 번째 오버레이" },
-];
-
-function KakaoMap() {
-  const [overlays] = useState(overlayData);
-
-  return (
-    <Map
-      center={{ lat: 33.450701, lng: 126.570667 }}
-      style={{ width: "100%", height: "400px" }}
-      level={3}
-    >
-      {overlays.map((overlay) => (
-        <CustomOverlayMap key={overlay.id} position={overlay.position}>
-          <div
-            style={{
-              backgroundColor: "#fff",
-              padding: "10px",
-              border: "1px solid #ddd",
-              borderRadius: "5px",
-              boxShadow: "2px 2px 5px rgba(0, 0, 0, 0.2)",
-            }}
-          >
-            {overlay.content}
-          </div>
-        </CustomOverlayMap>
-      ))}
-    </Map>
+  box-shadow: 1px 1px 5px 0px black;
+  background: linear-gradient(
+    359.26deg,
+    #3c41c7 0.02%,
+    #3742b2 83.23%,
+    #3642ae 98.76%
   );
+  color: #ffffff;
 }
 
-export default KakaoMap; */
+.pointer-btn:hover {
+  background: black;
+  color: #cccccc;
+}
+
+/* 바텀시트 */
+.sheet-wrap {
+  width: 100%;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  /* top: calc(100% - 50px); 시트가 얼마나 보일지 */
+  z-index: 1;
+  border-radius: 12px 12px 0 0;
+  background: linear-gradient(
+    359.26deg,
+    #3c41c7 0.02%,
+    #3742b2 83.23%,
+    #3642ae 98.76%
+  );
+  /* transition: transform 100ms linear; */
+}
+
+.sheet-handle-wrap {
+  height: 50px;
+  padding: 15px 0;
+  cursor: pointer;
+}
+
+.sheet-btn-handle {
+  width: 20%;
+  height: 30%;
+  border-radius: 10px;
+  background-color: #cccccc;
+  margin: auto;
+}
+
+.sheet-handle-wrap:active .sheet-btn-handle {
+  background: #090909;
+}
+
+.sheet-content-wrap {
+  overflow: auto;
+  max-height: calc(
+    100vh - 100px
+  ); /* 최대 높이를 설정하여, 그 이상일 경우 스크롤이 생기도록 함 */
+}
+
+.sheet-content-body {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid #fff;
+  justify-content: space-between;
+}
+
+.sheet-content {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 2em;
+}
+
+.content-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  color: #ccc;
+  font-weight: 600;
+}
+
+.sheet-content-btn {
+  background: #ccc;
+  border-bottom: 1px solid #fff;
+  width: 40%;
+  padding: 3em;
+  z-index: 5;
+}
+
+/* 
+바텀시트높이이상 올라가지못하게
+버튼이 3/1이상 노출되면 노출 상태 고정
+반대로 밀면 다시 원위치
+위아래 드래그로 인덱스변경
+바텀시트를 벗어나지않게 */

@@ -35663,5 +35663,3 @@ export const storePositions = [
     address: "경남 양산시 물금읍 범구로 17",
   },
 ];
-
-매장 데이터 json 

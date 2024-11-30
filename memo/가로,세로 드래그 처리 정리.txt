@@ -1,0 +1,44 @@
+const [isMotion, setIsMotion] = useState(true);
+가로 드래그인지, 세로 드래그인지 구분하기위해 불리언값의 상태를 만듬
+바텀시트는 위로 올력야 사용 가능하니까 초기값을 true로 만듬
+
+ 헤더를 클릭하면 세로 드래그가 활성화됨
+function BottomSheetHeader({
+  setIsMotion,
+}: {
+  setIsMotion: (arg: boolean) => void;
+}) {
+  // 마우스 다운, 터치 시작, 포인터 다운 이벤트 처리
+  const handleStartDrag = () => {
+    // setIsMotion(true); // 부모 모션 활성화
+  };
+  return (
+    <div
+      className="sheet-handle-wrap"
+      onMouseDown={handleStartDrag} // 마우스 이벤트
+      onTouchStart={handleStartDrag} // 터치 이벤트
+      onPointerDown={handleStartDrag} // 포인터 이벤트
+    >
+      <div className="sheet-btn-handle"></div>
+    </div>
+  );
+}
+
+export default BottomSheetHeader;
+
+반대로 콘텐츠 컴포넌트 영역을 누르면 세로 드래그가 비활성화됨으로 가로 드래그만 가능해짐
+const handleStartDrag = () => {
+  setIsMotion(false); // 부모 모션 비활성화
+};
+
+** 문제 발생
+가로 드래그모드 이후 세로 드래그 모드로 돌리려면 헤더를 한번 클릭해야한다
+
+** 문제 해결 및 원인
+헤더에 클릭이벤트로 세로 드래그 모드를 활성화해줬는데 세로로 드래그를 하기 위해 이미 잡고 바로 시도하기때문에
+바텀시트는 헤더를 한번 놓기 전까지 false 상태이기때문이다 헤더를 놔야 true로 바뀌는데 붙잡고 안놓아서그럼
+
+어떻게 해결했나
+팀장님최고 팀장님 짱 진짜 진즉 물어볼걸 
+onTouchEnd 이벤트가 있었다 터치가 끝남과 동시 바로 세로모드 활성화시킨것
+헤더를 잡아야 바텀시트 조절이 가능하니까 콘텐츠 가로로 밀다가 다시 바텀시트 만지려고 마우스 떼는 순간 true로 바뀌는거
