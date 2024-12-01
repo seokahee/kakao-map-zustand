@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useMapStore, useStoreMarkersStore } from "../store";
 import { storePositions } from "../storeData";
-import { StorePositionsType } from "../types/type";
 import { debounce } from "./useDebounce";
 
 // 지도 상태와 관련된 모든 로직 관리
@@ -28,16 +27,21 @@ export const useKakaoMap = () => {
   const { storeMarkers, setStoreMarkers } = useStoreMarkersStore(); // 지도 영역에 포함되는 매장
 
   // 컴포넌트 마운트 시 초기화
+
   useEffect(() => {
-    if (isSaved && saveState.center) {
-      setMyMarkerState(saveState.center);
-      setMapState((prev) => ({
-        ...prev,
-        center: saveState.center,
-      }));
-      getAddressHandle(saveState.center.lat, saveState.center.lng);
+    if (window.kakao && window.kakao.maps) {
+      if (isSaved && saveState.center) {
+        setMyMarkerState(saveState.center);
+        setMapState((prev) => ({
+          ...prev,
+          center: saveState.center,
+        }));
+        getAddressHandle(saveState.center.lat, saveState.center.lng);
+      } else {
+        getCurrentAddress();
+      }
     } else {
-      getCurrentAddress();
+      console.error("Kakao Maps API가 로드되지 않았습니다.");
     }
   }, []);
 
