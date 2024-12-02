@@ -1,4 +1,4 @@
-type BottomSheetMetrics = {
+type MAX_YSheetMetrics = {
   touchStart: {
     sheetY: number;
     touchY: number;
@@ -18,12 +18,12 @@ type BottomSheetMetrics = {
 // movingDirection : 터치 이동 방향 (위로/아래로)
 // isContentAreaTouched :  컨텐츠 영역이 터치되었는지 여부
 
-export default function useBottomSheet() {
+export default function useMAX_YSheet() {
   const sheet = useRef<HTMLDivElement>(null); // 바텀시트 참조
   const content = useRef<HTMLDivElement>(null); // 컨텐츠 참조
 
   // 터치 전 기본 설정 0
-  const metrics = useRef<BottomSheetMetrics>({
+  const metrics = useRef<MAX_YSheetMetrics>({
     touchStart: {
       sheetY: 0,
       touchY: 0,
@@ -38,7 +38,7 @@ export default function useBottomSheet() {
   // 컴포넌트 마운트 시 작동
   useEffect(() => {
     // 바텀시트가 움직일 수 있는지 체크
-    const canUserMoveBottomSheet = () => {
+    const canUserMoveMAX_YSheet = () => {
       const { touchMove, isContentAreaTouched } = metrics.current;
 
       // 컨텐츠 영역이 아닌 곳을 터치하고 있다면 바텀시트를 이동시킬 수 있음
@@ -46,14 +46,14 @@ export default function useBottomSheet() {
         return true;
       }
 
-      // 옵션에서 지정해준 Y값이 TOP와 다르면 바텀시트를 이동시킬 수 있음
-      if (sheet.current!.getBoundingClientRect().y !== TOP) {
+      // 옵션에서 지정해준 Y값이 MIN_Y와 다르면 바텀시트를 이동시킬 수 있음
+      if (sheet.current!.getBoundingClientRect().y !== MIN_Y) {
         return true;
       }
 
       // 바텀시트가 최대로 내려갔을 때 이동 가능
       if (touchMove.movingDirection === "down") {
-        return content.current!.scrollTop <= 0; // 컨텐츠 영역을 스크롤 할 수 있으면 이동 가능
+        return content.current!.scrollMIN_Y <= 0; // 컨텐츠 영역을 스크롤 할 수 있으면 이동 가능
       }
       return false;
     };
@@ -90,26 +90,26 @@ export default function useBottomSheet() {
       }
 
       // 바텀시트 이동이 가능한 경우 이동
-      if (canUserMoveBottomSheet()) {
+      if (canUserMoveMAX_YSheet()) {
         e.preventDefault();
 
         const touchOffset = currentTouch.clientY - touchStart.touchY; // 터치 이동량 계산
         let nextSheetY = touchStart.sheetY + touchOffset; // 바텀시트 이동 Y좌표 계산
 
-        // Y좌표가 TOP보다 작으면 움직임 제한
-        if (nextSheetY <= TOP) {
-          nextSheetY = TOP;
+        // Y좌표가 MIN_Y보다 작으면 움직임 제한
+        if (nextSheetY <= MIN_Y) {
+          nextSheetY = MIN_Y;
         }
 
-        // Y좌표가 BOTTOM보다 크면 움직임 제한
-        if (nextSheetY >= BOTTOM) {
-          nextSheetY = BOTTOM;
+        // Y좌표가 MAX_Y보다 크면 움직임 제한
+        if (nextSheetY >= MAX_Y) {
+          nextSheetY = MAX_Y;
         }
 
         // 바텀시트 이동
         sheet.current!.style.setProperty(
           "transform",
-          `translateY(${nextSheetY - BOTTOM}px)`
+          `translateY(${nextSheetY - MAX_Y}px)`
         );
       } else {
         document.body.style.overflowY = "hidden"; // 바텀시트를 움직일수없으면 스크롤 방지
@@ -124,8 +124,8 @@ export default function useBottomSheet() {
       // Snap 애니메이션으로 바텀시트 위치 조정
       // const currentSheetY = sheet.current!.getBoundingClientRect().y;
 
-      // 현재 Y좌표가 TOP가 아니면 위치를 스냅해서 설정
-      // if (currentSheetY !== TOP) {
+      // 현재 Y좌표가 MIN_Y가 아니면 위치를 스냅해서 설정
+      // if (currentSheetY !== MIN_Y) {
       //   if (touchMove.movingDirection === "down") {
       //     sheet.current!.style.setProperty("transform", "translateY(0)"); // 바텀시트를 최상단으로
       //   }
@@ -133,7 +133,7 @@ export default function useBottomSheet() {
       //   if (touchMove.movingDirection === "up") {
       //     sheet.current!.style.setProperty(
       //       "transform",
-      //       `translateY(${TOP - BOTTOM}px)`  // 바텀시트를 최하단으로
+      //       `translateY(${MIN_Y - MAX_Y}px)`  // 바텀시트를 최하단으로
       //     );
       //   }
       // }

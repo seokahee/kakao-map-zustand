@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import { BOTTOM, TOP } from "./bottomSheetOption";
+import { useEffect, useRef } from "react";
+import { MAX_Y, MIN_Y } from "./bottomSheetOption";
 
 type BottomSheetMetrics = {
   touchStart: {
@@ -22,8 +22,8 @@ type BottomSheetMetrics = {
 // isContentAreaTouched :  컨텐츠 영역이 터치되었는지 여부
 
 export default function useBottomSheet() {
-  const sheet = useRef<HTMLDivElement>(null); // 바텀시트
-  const content = useRef<HTMLDivElement>(null); // 컨텐츠
+  const sheet = useRef<HTMLDivElement>(null); // 바텀시트 참조
+  const content = useRef<HTMLDivElement>(null); // 컨텐츠 참조
 
   // 터치 전 기본 설정 0
   const metrics = useRef<BottomSheetMetrics>({
@@ -38,6 +38,7 @@ export default function useBottomSheet() {
     isContentAreaTouched: false,
   });
 
+  // 컴포넌트 마운트 시 작동
   useEffect(() => {
     // 바텀시트가 움직일 수 있는지 체크
     const canUserMoveBottomSheet = () => {
@@ -48,8 +49,8 @@ export default function useBottomSheet() {
         return true;
       }
 
-      // 옵션에서 지정해준 Y값이 TOP와 다르면 바텀시트를 이동시킬 수 있음
-      if (sheet.current!.getBoundingClientRect().y !== TOP) {
+      // 옵션에서 지정해준 Y값이 MIN_Y와 다르면 바텀시트를 이동시킬 수 있음
+      if (sheet.current!.getBoundingClientRect().y !== MIN_Y) {
         return true;
       }
 
@@ -98,20 +99,20 @@ export default function useBottomSheet() {
         const touchOffset = currentTouch.clientY - touchStart.touchY; // 터치 이동량 계산
         let nextSheetY = touchStart.sheetY + touchOffset; // 바텀시트 이동 Y좌표 계산
 
-        // Y좌표가 TOP보다 작으면 움직임 제한
-        if (nextSheetY <= TOP) {
-          nextSheetY = TOP;
+        // Y좌표가 MIN_Y보다 작으면 움직임 제한
+        if (nextSheetY <= MIN_Y) {
+          nextSheetY = MIN_Y;
         }
 
-        // Y좌표가 BOTTOM보다 크면 움직임 제한
-        if (nextSheetY >= BOTTOM) {
-          nextSheetY = BOTTOM;
+        // Y좌표가 MAX_Y보다 크면 움직임 제한
+        if (nextSheetY >= MAX_Y) {
+          nextSheetY = MAX_Y;
         }
 
         // 바텀시트 이동
         sheet.current!.style.setProperty(
           "transform",
-          `translateY(${nextSheetY - BOTTOM}px)`
+          `translateY(${nextSheetY - MAX_Y}px)`
         );
       } else {
         document.body.style.overflowY = "hidden"; // 바텀시트를 움직일수없으면 스크롤 방지
@@ -124,21 +125,21 @@ export default function useBottomSheet() {
       const { touchMove } = metrics.current;
 
       // Snap 애니메이션으로 바텀시트 위치 조정
-      const currentSheetY = sheet.current!.getBoundingClientRect().y;
+      // const currentSheetY = sheet.current!.getBoundingClientRect().y;
 
-      // 현재 Y좌표가 TOP가 아니면 위치를 스냅해서 설정
-      if (currentSheetY !== TOP) {
-        if (touchMove.movingDirection === "down") {
-          sheet.current!.style.setProperty("transform", "translateY(0)"); // 바텀시트를 최상단으로
-        }
+      // 현재 Y좌표가 MIN_Y가 아니면 위치를 스냅해서 설정
+      // if (currentSheetY !== MIN_Y) {
+      //   if (touchMove.movingDirection === "down") {
+      //     sheet.current!.style.setProperty("transform", "translateY(0)"); // 바텀시트를 최상단으로
+      //   }
 
-        if (touchMove.movingDirection === "up") {
-          sheet.current!.style.setProperty(
-            "transform",
-            `translateY(${TOP - BOTTOM}px)` // 바텀시트를 최하단으로
-          );
-        }
-      }
+      //   if (touchMove.movingDirection === "up") {
+      //     sheet.current!.style.setProperty(
+      //       "transform",
+      //       `translateY(${MIN_Y - MAX_Y}px)`  // 바텀시트를 최하단으로
+      //     );
+      //   }
+      // }
 
       // metrics 초기화.
       metrics.current = {

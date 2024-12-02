@@ -6,7 +6,7 @@ import ContentDeleteBtn from "./ContentDeleteBtn";
 import ContentDragBtn from "./ContentDragBtn";
 import ContentItem from "./ContentItem";
 
-function BottomSheetContents({
+function MAX_YSheetContents({
   setIsMotion,
 }: {
   setIsMotion: (arg: boolean) => void;
@@ -82,4 +82,4 @@ function BottomSheetContents({
   );
 }
 
-export default BottomSheetContents;
+export default MAX_YSheetContents;

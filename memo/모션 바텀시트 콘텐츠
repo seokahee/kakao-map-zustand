@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useStoreMarkersStore } from "../store";
 import { StorePositionsType } from "../types/type";
 
-function BottomSheetContents({
+function MAX_YSheetContents({
   setIsMotion,
 }: {
   setIsMotion: (arg: boolean) => void;
@@ -90,4 +90,4 @@ function BottomSheetContents({
   );
 }
 
-export default BottomSheetContents;
+export default MAX_YSheetContents;

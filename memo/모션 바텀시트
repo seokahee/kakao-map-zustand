@@ -1,9 +1,9 @@
 import { motion, useAnimation } from "framer-motion";
 import { PointerEvent, useEffect, useState } from "react";
-import BottomSheetContents from "./BottomSheetContents";
-import BottomSheetHeader from "./BottomSheetHeader";
+import MAX_YSheetContents from "./MAX_YSheetContents";
+import MAX_YSheetHeader from "./MAX_YSheetHeader";
 
-function BottomSheet() {
+function MAX_YSheet() {
   // 애니메이션 컨트롤러 애니메이션 효과 + 상태변화(동작) 제어를 통해 if (dragY > threshold) 조건에 따라 원위치됨
   const controls = useAnimation(); // 애니메이션 컨트롤러
 
@@ -37,8 +37,8 @@ function BottomSheet() {
       // drag={"y"}
       dragMomentum={false} // 모션 밀림 방지
       dragConstraints={{
-        top: window.innerHeight * 0.1, // 화면 높이의 10%
-        bottom: window.innerHeight * 1 - 50, // 화면 높이의 100% - 50px
+        MIN_Y: window.innerHeight * 0.1, // 화면 높이의 10%
+        MAX_Y: window.innerHeight * 1 - 50, // 화면 높이의 100% - 50px
       }}
       initial={{
         y: window.innerHeight * 1 - 50, // 렌더 시 바텀시트 위치 지점
@@ -47,14 +47,14 @@ function BottomSheet() {
       onDragEnd={(e, info) => onDragEnd(e, info)}
       onDragStart={() => console.log("내가 부모다")}
     >
-      <BottomSheetHeader />
+      <MAX_YSheetHeader />
       <div className="sheet-contents-wrap">
         <div className="contents-body">
-          <BottomSheetContents setIsMotion={setIsMotion} />
+          <MAX_YSheetContents setIsMotion={setIsMotion} />
         </div>
       </div>
     </motion.div>
   );
 }
 
-export default BottomSheet;
+export default MAX_YSheet;

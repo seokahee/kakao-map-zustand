@@ -1,18 +1,11 @@
 import { Reorder, useDragControls } from "framer-motion";
 import { StorePositionsType } from "../types/type";
-import ContentDragBtn from "./ContentDragBtn";
 
-function ContentItem({
-  item,
-  setIsItemDrag,
-}: {
-  item: StorePositionsType;
-  setIsItemDrag: (arg: boolean) => void;
-}) {
+function ContentItem({ item }: { item: StorePositionsType }) {
   const dragControls = useDragControls();
   return (
     <Reorder.Item
-      className="store-li"
+      className="store-item"
       value={item}
       id={item.id}
       dragListener={false}
@@ -27,13 +20,6 @@ function ContentItem({
         <div>{item.storeName}</div>
         <div>{item.machine}</div>
         <div>{item.address}</div>
-      </div>
-
-      <div className="dnd-btn">
-        <ContentDragBtn
-          dragControls={dragControls}
-          setIsItemDrag={setIsItemDrag}
-        />
       </div>
     </Reorder.Item>
   );

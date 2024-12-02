@@ -57,3 +57,24 @@ export const useStoreMarkersStore = create<StoreMarkerType>((set) => ({
     });
   },
 }));
+
+// type StoreMarkerType = {
+//   storeMarkers: StorePositionsType[];
+//   setStoreMarkers: (storeMarkers: StorePositionsType[]) => void;
+// };
+
+// export const useStoreMarkersStore = create(
+//   persist<StoreMarkerType>(
+//     (set) => ({
+//       storeMarkers: [],
+//       setStoreMarkers: (storeMarkers: StorePositionsType[]) => {
+//         set({
+//           storeMarkers,
+//         });
+//       },
+//     }),
+//     {
+//       name: "saveIndex",
+//     }
+//   )
+// );

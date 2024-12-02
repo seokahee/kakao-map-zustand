@@ -18,7 +18,7 @@ export type MapType = {
   errMsg: string;
 };
 
-export type BottomSheetMetrics = {
+export type MAX_YSheetMetrics = {
   touchStart: {
     sheetY: number;
     touchY: number;

@@ -3828,7 +3828,7 @@ export const storePositions = [
   },
   {
     id: "479",
-    storeName: "TOP동전노래연습장(창원성산)",
+    storeName: "MIN_Y동전노래연습장(창원성산)",
     machine: "케이머신",
     lat: "35.22034615",
     lng: "128.6835967",
@@ -4436,7 +4436,7 @@ export const storePositions = [
   },
   {
     id: "555",
-    storeName: "K-TOP(독산)",
+    storeName: "K-MIN_Y(독산)",
     machine: "조이머신",
     lat: "37.46907437",
     lng: "126.9026387",
@@ -4500,7 +4500,7 @@ export const storePositions = [
   },
   {
     id: "563",
-    storeName: "toppc&cafe(인천 미추홀)",
+    storeName: "MIN_Ypc&cafe(인천 미추홀)",
     machine: "조이머신",
     lat: "37.46053532",
     lng: "126.6784262",
@@ -5556,7 +5556,7 @@ export const storePositions = [
   },
   {
     id: "695",
-    storeName: "J-TOP(송파)",
+    storeName: "J-MIN_Y(송파)",
     machine: "조이머신",
     lat: "37.4913665",
     lng: "127.1155591",
@@ -7293,7 +7293,7 @@ export const storePositions = [
   },
   {
     id: "912",
-    storeName: "nTop(자양)",
+    storeName: "nMIN_Y(자양)",
     machine: "조이머신",
     lat: "37.5361417",
     lng: "127.0662793",
@@ -7453,7 +7453,7 @@ export const storePositions = [
   },
   {
     id: "932",
-    storeName: "NTOP(안산고잔)",
+    storeName: "NMIN_Y(안산고잔)",
     machine: "조이머신",
     lat: "37.31824078",
     lng: "126.8414166",
@@ -34856,7 +34856,7 @@ export const storePositions = [
   },
   {
     id: "5459",
-    storeName: "TOP코인노래연습장(송탄점)",
+    storeName: "MIN_Y코인노래연습장(송탄점)",
     machine: "케이머신",
     lat: "37.06775576",
     lng: "127.063508",

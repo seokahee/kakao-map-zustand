@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { Map, MapMarker, MarkerClusterer } from "react-kakao-maps-sdk";
-import DragMenu from "../../bottomSheet/BottomSheet";
 import { useMapStore } from "../../store";
 import { storePositions } from "../../storeData";
 import { StorePositionsType } from "../../types/type";
 import { debounce } from "../../hook/useDebounce";
+import BottomSheet from "../../bottomSheet/BottomSheet";
 
 function MapMultiMarker() {
   const [mapState, setMapState] = useState({
@@ -270,7 +270,7 @@ function MapMultiMarker() {
           현재 위치
         </button>
       </div>
-      <DragMenu />
+      <BottomSheet />
     </div>
   );
 }
