@@ -1,6 +1,10 @@
-function BottomSheetHeader() {
+function BottomSheetHeader({
+  setIsMotion,
+}: {
+  setIsMotion: (arg: boolean) => void;
+}) {
   return (
-    <div className="sheet-handle-wrap">
+    <div onMouseOver={() => setIsMotion(true)} className="sheet-handle-wrap">
       <div className="sheet-btn-handle"></div>
     </div>
   );

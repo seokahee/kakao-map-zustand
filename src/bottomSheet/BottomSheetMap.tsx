@@ -1,8 +1,8 @@
 import { Map, MarkerClusterer } from "react-kakao-maps-sdk";
 import MapPositionBtns from "../maps/MapPositionBtns";
 import MapStoreMarker from "../maps/MapStoreMarker";
-import { useKakaoMap } from "../util/useKakaoMap";
 import BottomSheet from "./BottomSheet";
+import { useKakaoMap } from "../hook/useKakaoMap";
 
 function BottomSheetMap() {
   const {

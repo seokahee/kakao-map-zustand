@@ -1,9 +1,11 @@
 import { motion, useAnimation } from "framer-motion";
-import { PointerEvent, useEffect, useState } from "react";
+import { PointerEvent, useState } from "react";
 import BottomSheetContents from "./BottomSheetContents";
 import BottomSheetHeader from "./BottomSheetHeader";
 
 function BottomSheet() {
+  const [isMotion, setIsMotion] = useState(true);
+
   // 애니메이션 컨트롤러 애니메이션 효과 + 상태변화(동작) 제어를 통해 if (dragY > threshold) 조건에 따라 원위치됨
   const controls = useAnimation(); // 애니메이션 컨트롤러
 
@@ -25,16 +27,10 @@ function BottomSheet() {
     }
   };
 
-  const [isMotion, setIsMotion] = useState(true);
-
-  useEffect(() => {
-    console.log(isMotion);
-  }, [isMotion]);
   return (
     <motion.div
       className="sheet-wrap"
       drag={isMotion ? "y" : false}
-      // drag={"y"}
       dragMomentum={false} // 모션 밀림 방지
       dragConstraints={{
         top: window.innerHeight * 0.1, // 화면 높이의 10%
@@ -45,9 +41,8 @@ function BottomSheet() {
       }}
       animate={controls}
       onDragEnd={(e, info) => onDragEnd(e, info)}
-      onDragStart={() => console.log("내가 부모다")}
     >
-      <BottomSheetHeader />
+      <BottomSheetHeader setIsMotion={setIsMotion} />
       <div className="sheet-contents-wrap">
         <div className="contents-body">
           <BottomSheetContents setIsMotion={setIsMotion} />

@@ -1,5 +1,5 @@
 import { motion, useAnimation } from "framer-motion";
-import { useState } from "react";
+import { PointerEvent, useEffect, useState } from "react";
 import BottomSheetContents from "./BottomSheetContents";
 import BottomSheetHeader from "./BottomSheetHeader";
 
@@ -21,28 +21,15 @@ function BottomSheet() {
       controls.start({
         y: window.innerHeight * 1 - 50, // 바닥 지점으로 이동
         transition: { type: "tween", duration: 0.5, ease: "easeInOut" },
-        // type: "tween",          // 애니메이션 종류: `tween` (지속적으로 부드럽게 변화).
-        // duration: 0.5,          // 애니메이션 지속 시간: 0.5초.
-        // ease: "easeInOut",      // `easeInOut`로 시작과 끝 모두 부드럽게 진행.
       });
     }
   };
 
   const [isMotion, setIsMotion] = useState(true);
 
-  // // 드래그 시작 시 BottomSheet의 모션을 비활성화
-  // const onDragStart = (e: MouseEvent | TouchEvent | PointerEvent) => {
-  //   if (!isMotion) {
-  //     e.stopPropagation();
-  //     console.log("BottomSheet 움직이는중");
-  //   }
-  // };
-
-  // // BottomSheet의 클릭 시 전파를 막기
-  // const handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-  //   e.stopPropagation(); // 이벤트 전파 막기
-  // };
-
+  useEffect(() => {
+    console.log(isMotion);
+  }, [isMotion]);
   return (
     <motion.div
       className="sheet-wrap"
@@ -58,19 +45,16 @@ function BottomSheet() {
       }}
       animate={controls}
       onDragEnd={(e, info) => onDragEnd(e, info)}
-      // onDragStart={(e) => onDragStart(e)}
-      // onClick={(e) => handleClick(e)}
+      onDragStart={() => console.log("내가 부모다")}
     >
-      <BottomSheetHeader setIsMotion={setIsMotion} />
+      <BottomSheetHeader />
       <div className="sheet-contents-wrap">
         <div className="contents-body">
           <BottomSheetContents setIsMotion={setIsMotion} />
         </div>
       </div>
     </motion.div>
-
   );
 }
 
 export default BottomSheet;
-나의 부모
