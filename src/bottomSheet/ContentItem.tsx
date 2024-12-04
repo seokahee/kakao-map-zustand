@@ -5,7 +5,7 @@ function ContentItem({ item }: { item: StorePositionsType }) {
   const dragControls = useDragControls();
   return (
     <Reorder.Item
-      className="store-item"
+      className="content-item "
       value={item}
       id={item.id}
       dragListener={false}
