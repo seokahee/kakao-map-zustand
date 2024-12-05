@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useMapStore, useStoreMarkersStore } from "../store";
-import { storePositions } from "../storeData";
+import { storePositions } from "../temp/storeData";
 import { debounce } from "./useDebounce";
 
 // 지도 상태와 관련된 모든 로직 관리

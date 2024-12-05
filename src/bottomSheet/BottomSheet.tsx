@@ -1,5 +1,5 @@
 import { motion, useAnimation } from "framer-motion";
-import { PointerEvent, useState } from "react";
+import { PointerEvent, useEffect, useState } from "react";
 import BottomSheetContents from "./BottomSheetContents";
 import BottomSheetHeader from "./BottomSheetHeader";
 
@@ -21,23 +21,25 @@ function BottomSheet() {
     if (dragY > threshold) {
       // 1/3 지점 아래로 내려가면 바닥까지 이동
       controls.start({
-        y: window.innerHeight * 1 - 50, // 바닥 지점으로 이동
+        y: bottom, // 바닥 지점으로 이동
         transition: { type: "tween", duration: 0.5, ease: "easeInOut" },
       });
     }
   };
 
+  const top = window.innerHeight * 0.1;
+  const bottom = window.innerHeight * 1 - 50;
   return (
     <motion.div
       className="sheet-wrap"
       drag={isMotion ? "y" : false}
       dragMomentum={false} // 모션 밀림 방지
       dragConstraints={{
-        top: window.innerHeight * 0.1, // 화면 높이의 10%
-        bottom: window.innerHeight * 1 - 50, // 화면 높이의 100% - 50px
+        top: top, // 화면 높이의 10%
+        bottom: bottom, // 화면 높이의 100% - 50px
       }}
       initial={{
-        y: window.innerHeight * 1 - 50, // 렌더 시 바텀시트 위치 지점
+        y: bottom, // 렌더 시 바텀시트 위치 지점
       }}
       animate={controls}
       onDragEnd={(e, info) => onDragEnd(e, info)}

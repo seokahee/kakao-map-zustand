@@ -1,15 +1,10 @@
-import { DragControls } from "framer-motion";
-
-function ContentDragBtn({ dragControls }: { dragControls: DragControls }) {
+function ContentDragBtn() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 39 39"
       width="39"
       height="39"
-      onPointerDown={(event) => {
-        dragControls.start(event);
-      }}
     >
       <path
         d="M 5 0 C 7.761 0 10 2.239 10 5 C 10 7.761 7.761 10 5 10 C 2.239 10 0 7.761 0 5 C 0 2.239 2.239 0 5 0 Z"
