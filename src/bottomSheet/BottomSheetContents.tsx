@@ -1,7 +1,8 @@
-import React, { useState, useRef } from "react";
+import { PanInfo, Reorder, motion, useDragControls } from "framer-motion";
 import { useStoreMarkersStore } from "../store";
+import { useState } from "react";
 import ContentDragBtn from "./ContentDragBtn";
-import { StorePositionsType } from "../types/type";
+import ContentItem from "./ContentItem";
 
 function BottomSheetContents({
   setIsMotion,
@@ -11,41 +12,29 @@ function BottomSheetContents({
   const { storeMarkers, setStoreMarkers } = useStoreMarkersStore();
 
   const [draggedItems, setDraggedItems] = useState<Set<string>>(new Set()); // 아이템 드래그 상태
-  const [dragStart, setDragStart] = useState(0); // 초기 드래그 X좌표
 
-  const dragX = useRef<HTMLDivElement | null>(null);
+  const [te, setTe] = useState(false);
+  const [te2, setTe2] = useState(false);
 
   const onPointerDown = () => {
     setIsMotion(false); // 부모 모션 비활성화
+    // setIsTest(true);
   };
 
-  const onDragStart = (e: React.DragEvent<HTMLDivElement>, id: string) => {
-    dragX.current = e.currentTarget; // dragX에 현재 요소 할당
-    setDragStart(e.clientX); // 드래그 시작 위치 설정
-    if (dragStart) {
-      dragX.current.classList.remove("drag-left");
-    }
-  };
-
-  const onDrag = (e: React.DragEvent<HTMLDivElement>, id: string) => {
-    if (!dragX.current) return;
-  };
-
-  const onDragEnd = (e: React.DragEvent<HTMLDivElement>, id: string) => {
-    if (!dragX.current) return;
-
-    // 드래그 거리 계산 (드래그 길이 - 드래그 시작지점 = 왼쪽(음수) 오른쪽(양수)가 나옴)
-    const offsetX = e.clientX - dragStart;
+  const onDragEnd = (
+    e: MouseEvent | TouchEvent | PointerEvent,
+    info: PanInfo,
+    id: string
+  ) => {
+    const offset = info.offset;
+    console.log("offset", offset);
 
     // 왼쪽으로 100이상 드래그 시 요소 밀기
-    if (offsetX < -100) {
-      dragX.current.classList.add("drag-left");
+    if (offset.x < -100) {
       setDraggedItems((prev) => new Set(prev).add(id)); // 드래그된 항목 추적
     }
     // 오른쪽으로 드래그하면 원상복귀
-    if (offsetX > 100) {
-      dragX.current.classList.remove("drag-left");
-
+    if (offset.x > 100) {
       setDraggedItems((prev) => {
         const updatedItems = new Set(prev);
         updatedItems.delete(id); // 드래그 끝나면 해당 아이템 삭제
@@ -55,53 +44,62 @@ function BottomSheetContents({
   };
 
   const handleDelete = (id: string) => {
-    console.log(`Deleted: ${id}`);
+    console.log("Deleted", id);
   };
 
-  const dragHandler = (
-    e: React.DragEvent<HTMLDivElement>,
-    item: StorePositionsType
-  ) => {
-    e.dataTransfer.setData(
-      "storeData",
-      JSON.stringify({
-        id: item.id,
-        storeName: item.storeName,
-        machine: item.machine,
-        lat: item.lat,
-        lng: item.lng,
-        address: item.address,
-      })
-    );
-  };
+  const dragControls = useDragControls();
 
-  const dropHandler = () => {
-    console.log("내려놔유");
-  };
-
-  const onDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
+  const onDrag = (e: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+    // const offset = info.offset;
+    // // console.log("offset", offset);
+    // // console.log("info", info);
+    // const x = Math.abs(offset.x);
+    // const y = Math.abs(offset.y);
+    // setTe(Math.abs(info.offset.x) > Math.abs(info.offset.y));
+    // if (x > y) {
+    //   console.log("가로 모션");
+    // }
+    // if (y > x) {
+    //   console.log("세로모션");
+    // }
   };
 
   return (
-    <div
+    <Reorder.Group
+      axis="y"
+      values={storeMarkers}
+      onReorder={setStoreMarkers}
       className="sheet-content-wrap"
-      // onDrop={dropHandler}
-      // onDragOver={(e) => onDragOver(e)}
+      onPointerDown={onPointerDown}
     >
       {storeMarkers.map((item) => {
-        const isDragged = draggedItems.has(item.id); // 드래그된 항목 확인
+        const isItemDragged = draggedItems.has(item.id); // 해당 아이템이 드래그된 상태인지 체크
+
         return (
-          <div
+          <Reorder.Item
             key={item.id}
+            value={item}
             className="sheet-content"
-            onPointerDown={onPointerDown}
-            draggable="true"
-            onDragStart={(e) => onDragStart(e, item.id)} // onDragStart에 dragX.current 설정
-            onDrag={(e) => onDrag(e, item.id)}
-            onDragEnd={(e) => onDragEnd(e, item.id)}
+            // dragListener={te ? false : true}
+            // dragListener={te ? true : false}
+            dragListener={false}
+            dragControls={dragControls}
           >
-            <div className="content-item">
+            <motion.div
+              className="content-item"
+              // drag={te2 ? false : "x"}
+              drag={"x"}
+              // dragListener={te ? true : false}
+              // dragListener={te ? false : true}
+              dragConstraints={{ left: -100, right: 0 }}
+              onDragEnd={(e, info) => onDragEnd(e, info, item.id)}
+              initial={{ x: 0 }}
+              dragMomentum={false}
+              onDrag={(e, info) => onDrag(e, info)}
+              // animate={{ x: 0 }}
+              // whileDrag={{ scale: 1.05 }}
+              // transition={{ type: "spring", stiffness: 300 }}
+            >
               <img
                 src="https://i.namu.wiki/i/cRmy09fCmil6W_AKYhSNoAluIvm1gNrmGBpLacGMeef8RW4CXohhn9dC-Q8zP5RjiTvErkfQ1Z3vZUpaiFe1ig.gif"
                 alt="Temporary image"
@@ -112,39 +110,34 @@ function BottomSheetContents({
                 <div>{item.machine}</div>
                 <div>{item.address}</div>
               </div>
-            </div>
+              {/* <ContentItem item={item} /> */}
+            </motion.div>
 
-            <div
-              className="dnd-btn"
-              onDragStart={(e) => dragHandler(e, item)}
-              draggable="true"
-              style={{
-                opacity: isDragged ? 0 : 1,
-                transform: isDragged ? "translateX(0)" : "translateX(100%)",
-                transition: "transform 0.3s ease, opacity 0.3s ease",
-              }}
-            >
-              <ContentDragBtn />
-            </div>
+            {!isItemDragged && (
+              <div className="dnd-btn">
+                <ContentDragBtn dragControls={dragControls} />
+              </div>
+            )}
 
-            <div
-              className="delete-btn"
-              style={{
-                opacity: isDragged ? 1 : 0,
-                transform: isDragged ? "translateX(0)" : "translateX(100%)",
-                transition: "transform 0.3s ease, opacity 0.3s ease",
+            <motion.div
+              className="sheet-content-btn"
+              initial={{ opacity: 0, x: "100%" }} // 기본적으로 숨겨진 버튼
+              animate={{
+                opacity: isItemDragged ? 1 : 0,
+                x: isItemDragged ? 0 : "100%",
               }}
-              onClick={() => handleDelete(item.id)}
+              transition={{ type: "tween", duration: 0.5 }} // 애니메이션 설정
+              onClick={() => handleDelete(item.id)} // 삭제 버튼 클릭 시
             >
               <img
                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjzkKApgCqmIe2-XZnAZURKLuDmNVwO7jALA&s"
-                alt="Delete"
+                alt="삭제 임시 이미지"
               />
-            </div>
-          </div>
+            </motion.div>
+          </Reorder.Item>
         );
       })}
-    </div>
+    </Reorder.Group>
   );
 }
 

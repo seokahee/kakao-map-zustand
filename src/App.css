@@ -72,6 +72,7 @@
   display: flex;
   flex-direction: column;
   position: fixed;
+
   z-index: 1;
   border-radius: 12px 12px 0 0;
   background: linear-gradient(
@@ -120,19 +121,19 @@
   align-items: center;
   flex-direction: row;
   /* transition: transform 0.8s ease, opacity 0.8s ease; */
-  transition: transform 0.8s ease;
+  /* transition: transform 0.8s ease; */
   border-bottom: 1px solid #ccc;
 }
 
 /* 왼쪽으로 밀었을 때 */
 .drag-left {
-  transform: translateX(-200px);
+  /* transform: translateX(-200px); */
   opacity: 1;
 }
 
 /* 원래 위치로 복귀 */
 .reset {
-  transform: translateX(0);
+  /* transform: translateX(0); */
 }
 .content-item {
   display: flex;

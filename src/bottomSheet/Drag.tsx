@@ -49,7 +49,7 @@
 //   return (
 //     <>
 //       {storeMarkers.map((item: StorePositionsType) => {
-//         const isItemDragged = draggedItems.has(item.id); // 해당 아이템이 드래그된 상태인지 체크
+// const isItemDragged = draggedItems.has(item.id); // 해당 아이템이 드래그된 상태인지 체크
 //         return (
 //           <motion.div
 //             key={item.id}
@@ -58,7 +58,7 @@
 //             dragMomentum={false} // 모션 밀림 방지
 //             dragConstraints={{ left: -200, right: 0 }}
 //             onPointerDown={onPointerDown}
-//             onDragEnd={(e, info) => onDragEnd(e, info, item.id)}
+// onDragEnd={(e, info) => onDragEnd(e, info, item.id)}
 //           >
 //             <div className="content-item">
 //               <img
@@ -73,28 +73,28 @@
 //               </div>
 //             </div>
 
-//             {!isItemDragged && (
-//               <div className="dnd-btn">
-//                 <ContentDragBtn dragControls={dragControls} />
-//               </div>
-//             )}
+// {!isItemDragged && (
+//   <div className="dnd-btn">
+//     <ContentDragBtn dragControls={dragControls} />
+//   </div>
+// )}
 
 //             {/* 삭제 버튼 */}
-//             <motion.div
-//               className="sheet-content-btn"
-//               initial={{ opacity: 0, x: "100%" }} // 기본적으로 숨겨진 버튼
-//               animate={{
-//                 opacity: isItemDragged ? 1 : 0,
-//                 x: isItemDragged ? 0 : "100%",
-//               }}
-//               transition={{ type: "tween", duration: 0.5 }} // 애니메이션 설정
-//               onClick={() => handleDelete(item.id)} // 삭제 버튼 클릭 시
-//             >
-//               <img
-//                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjzkKApgCqmIe2-XZnAZURKLuDmNVwO7jALA&s"
-//                 alt="삭제 임시 이미지"
-//               />
-//             </motion.div>
+// <motion.div
+//   className="sheet-content-btn"
+//   initial={{ opacity: 0, x: "100%" }} // 기본적으로 숨겨진 버튼
+//   animate={{
+//     opacity: isItemDragged ? 1 : 0,
+//     x: isItemDragged ? 0 : "100%",
+//   }}
+//   transition={{ type: "tween", duration: 0.5 }} // 애니메이션 설정
+//   onClick={() => handleDelete(item.id)} // 삭제 버튼 클릭 시
+// >
+//   <img
+//     src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjzkKApgCqmIe2-XZnAZURKLuDmNVwO7jALA&s"
+//     alt="삭제 임시 이미지"
+//   />
+// </motion.div>
 //           </motion.div>
 //         );
 //       })}

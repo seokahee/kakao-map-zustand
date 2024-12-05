@@ -1,13 +1,15 @@
-// 동적 좌표 + 불리언 버튼
 import { DragControls } from "framer-motion";
 
-function ContentDragBtn() {
+function ContentDragBtn({ dragControls }: { dragControls: DragControls }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 39 39"
       width="39"
       height="39"
+      onPointerDown={(event) => {
+        dragControls.start(event);
+      }}
     >
       <path
         d="M 5 0 C 7.761 0 10 2.239 10 5 C 10 7.761 7.761 10 5 10 C 2.239 10 0 7.761 0 5 C 0 2.239 2.239 0 5 0 Z"
@@ -46,12 +48,6 @@ function ContentDragBtn() {
         fill="#CCC"
       ></path>
     </svg>
-    // <img
-    //   className="dnd-btn-img"
-    //   src="https://i.pinimg.com/564x/be/a8/78/bea878880f834d55451f501d24900491.jpg"
-    //   alt="흰둥이 드래그 드롭 임시 이미지"
-    //   onPointerDown={(event) => dragControls.start(event)}
-    // />
   );
 }
 
