@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useMapStore, useStoreMarkersStore } from "../store";
+import { useMapStore, useStoreMarkersStore } from "../store/store";
 import { storePositions } from "../temp/storeData";
 import { debounce } from "./useDebounce";
 
@@ -25,8 +25,6 @@ export const useKakaoMap = () => {
 
   const { saveState, isSaved, setSaveState, setIsSaved } = useMapStore();
   const { storeMarkers, setStoreMarkers } = useStoreMarkersStore(); // 지도 영역에 포함되는 매장
-
-  // 컴포넌트 마운트 시 초기화
 
   useEffect(() => {
     if (window.kakao && window.kakao.maps) {

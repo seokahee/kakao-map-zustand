@@ -1,5 +1,4 @@
-import React from "react";
-import { MapPositionBtnsProps } from "../types/type";
+import { MapPositionBtnsProps } from "../../types/type";
 
 function MapPositionBtns({
   myMarkerState,

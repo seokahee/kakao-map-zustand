@@ -35,7 +35,7 @@ export type MapStoreMarkerPropsType = {
   isOpenStates: Record<string, boolean>;
   setIsOpenStates: React.Dispatch<
     React.SetStateAction<Record<string, boolean>>
-  >; // 상태 업데이트 함수
+  >;
   getMarkerImage: (machineType: string) => {
     src: string;
     size: { width: number; height: number };
