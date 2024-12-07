@@ -192,30 +192,31 @@ html {
   cursor: pointer;
 }
 
-.index-change-btn {
+/* .index-change-btn {
   position: absolute;
   right: 5rem;
 }
 
-/* const sortableRef = useRef<HTMLDivElement | null>(null);
+.index-change-btn:active .content-item {
+  background-color: #aaa;
+} */
 
-useEffect(() => {
-  if (sortableRef.current) {
-    const sortable = new Sortable(sortableRef.current, {
-      onEnd(e: any) {
-        const newStoreMarkers = [...storeMarkers];
-        const movedItem = newStoreMarkers.splice(e.oldIndex as number, 1)[0];
-        newStoreMarkers.splice(e.newIndex as number, 0, movedItem);
-        setStoreMarkers(newStoreMarkers);
-      },
-      handle: ".index-change-btn", // 여기서 버튼을 지정하여 해당 요소만 드래그 가능
-      animation: 150,
-      ghostClass: "blue-background-class",
-      preventOnFilter: false, // 다른 필터를 무시
-    });
+.sheet-content.dragging {
+  opacity: 0.5;
+  background-color: #f0f0f0;
+  transition: opacity 0.2s;
+}
 
-    return () => {
-      sortable.destroy();
-    };
-  }
-}, [storeMarkers, setStoreMarkers]); */
+.index-change-btn {
+  position: absolute;
+  right: 5rem;
+  cursor: grab;
+  user-select: none;
+  padding: 0.5rem;
+  background-color: #eee;
+  border-radius: 4px;
+}
+
+.index-change-btn:active {
+  cursor: grabbing;
+}
