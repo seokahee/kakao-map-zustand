@@ -1,320 +1,79 @@
-* {
+/* * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-
+  font-size: 1.6rem;
   -ms-overflow-style: none;
+}
+body {
+  width: 100vw;
+  height: 100vh;
 }
 ::-webkit-scrollbar {
   display: none;
-}
+} */
 
-/* 카카오 지도 */
-.wrap {
-  width: 100vw;
+body {
+  background-color: #f5f5f5;
   height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background: black;
+  overflow: hidden;
+  font-size: 1.6rem;
 }
 
-.map {
-  width: 100%;
-  height: 90%;
+.bottom-sheet-wrap {
+  height: 100vh;
+  overflow: hidden;
 }
 
-.info-window-div {
-  max-width: 300px;
-  padding: 0 5px;
-  white-space: nowrap;
+.bottom-sheet {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 80%;
+  background: #ffffff;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
 }
 
-.pointer-btn-wrap {
+.sheet-header {
+  height: 40px;
   display: flex;
   justify-content: center;
-  gap: 2em;
-  position: absolute;
-  top: 5%;
-  right: 5%;
-  z-index: 1;
-  flex-direction: column;
+  align-items: center;
+  cursor: grab;
+  padding: 10px;
+  background: #eee;
 }
 
-.pointer-btn {
-  max-width: 200px;
-  width: 100%;
-  padding: 0.8em;
-  border-radius: 20px;
-  font-size: 1em;
-  border: none;
-  cursor: pointer;
-  box-shadow: 1px 1px 5px 0px black;
-  background: linear-gradient(
-    359.26deg,
-    #3c41c7 0.02%,
-    #3742b2 83.23%,
-    #3642ae 98.76%
-  );
-  color: #ffffff;
-}
-
-.pointer-btn:hover {
-  background: black;
-  color: #cccccc;
-}
-
-/* 바텀시트 */
-/* 모션 프레이머의 기본적으로 translateY가 있기때문에 요소 위치가 불안정함 */
-.sheet-wrap {
-  width: 100%;
-  padding: 0 20px;
-  display: flex;
-  flex-direction: column;
-  position: fixed;
-
-  z-index: 1;
-  border-radius: 12px 12px 0 0;
-  background: linear-gradient(
-    359.26deg,
-    #3c41c7 0.02%,
-    #3742b2 83.23%,
-    #3642ae 98.76%
-  );
-}
-
-.sheet-handle-wrap {
-  height: 50px;
-  padding: 15px 0;
-  cursor: pointer;
-}
-
-.sheet-btn-handle {
-  width: 20%;
-  height: 30%;
-  border-radius: 10px;
-  background-color: #cccccc;
-  margin: auto;
-}
-
-.sheet-handle-wrap:active .sheet-btn-handle {
-  background: #090909;
+.sheet-handle {
+  width: 50px;
+  height: 5px;
+  background: #ccc;
+  border-radius: 2.5px;
 }
 
 .sheet-content-wrap {
-  overflow: auto;
-  max-height: calc(
-    100vh - 100px
-  ); /* 최대 높이를 설정하여, 그 이상일 경우 스크롤이 생기도록 함 */
+  padding: 16px;
+  overflow-y: auto;
 }
 
-.store-item img {
-  width: 200px;
-  height: 200px;
+.sheet-contents {
+  margin-bottom: 10px;
+  padding: 10px;
+  background: #f9f9f9;
+  border-radius: 8px;
 }
 
-/* .sheet-content {
-  width: 100%;
-  margin: auto;
-  /* position: relative; 
-  display: flex;
-  align-items: center;
-  flex-direction: row;
-  /* transition: transform 0.8s ease, opacity 0.8s ease; 
-  /* transition: transform 0.8s ease; 
-  border-bottom: 1px solid #ccc;
-  cursor: grab;
-} */
+/* 값을 유지하면서 리렌더링을 방지하기 위해
 
-.sheet-content {
-  position: relative;
-  display: flex;
-  align-items: center;
-  border-bottom: 1px solid #ccc;
-  cursor: grab;
-}
+유지 알이에프는 변경 가능한 참조 객체이다
 
-.sheet-content:active {
-  cursor: grabbing;
-}
+렌더링이 일어나도 값이 유지된다
 
-/* 왼쪽으로 밀었을 때 */
-.drag-left {
-  /* transform: translateX(-200px); */
-  /* opacity: 1; */
-}
+값이 변경되도 컴포넌트는 다시 렌더링되지않는다
 
-/* 원래 위치로 복귀 */
-.reset {
-  /* transform: translateX(0); */
-}
-/* .content-item {
-  display: flex;
-  width: 100%;
-  gap: 2rem;
-  align-items: center;
-  overflow: hidden;
-  position: relative;
-} */
-
-.content-item {
-  display: flex;
-  width: 100%;
-  gap: 2rem;
-  align-items: center;
-  overflow: hidden; /* 요소가 밖으로 나가지 않도록 숨김 */
-  position: relative;
-}
-
-.content-info {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  color: #ccc;
-  font-weight: 600;
-}
-
-.sheet-content-btn {
-  width: 10%;
-  height: 10%;
-}
-
-.dnd-btn:active {
-  cursor: grabbing;
-}
-
-.blue-background-class {
-  background-color: #ffffff30;
-  border: none;
-  opacity: 0.5;
-}
-
-/* .delete-btn {
-  position: absolute;
-  /* width: 150px; */
-/* height: 150px; 
-  right: -8%;
-} */
-
-.delete-btn {
-  position: absolute;
-  right: -100px;
-  top: 25%;
-  width: 100px;
-  height: 100px;
-  background-color: #ff4d4d;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.delete-btn img {
-  width: 100px;
-  height: 100px;
-}
-
-.left {
-  transform: translateX(-100px);
-}
-/* 
-바텀시트높이이상 올라가지못하게
-버튼이 3/1이상 노출되면 노출 상태 고정
-반대로 밀면 다시 원위치
-위아래 드래그로 인덱스변경
-바텀시트를 벗어나지않게 */
-
-/* 모션 겹치면 두번째 모션이 중간에 멈춰버림
-1 모션 작동중 2모션작동하면 2모션이 작동하다 멈춤
-
-반응형 시 세로 모션중 가로 모션도 작동함
-잔상도 튀어나가면 안됨
-
-바텀시트 반응형 적용 안됨
-
-
-휴지통 나온상태에서 다른거 꺼내면 기존꺼 모두 숨기기 >> 이거 진행중이얐음 */
-
-/* 드래그했어
-셋 객체에 이전값이 있어
-그걸 지워!
-모션도 모두 돌려!
-
-마지막에 드래그한 id가 셋 객체에 저장됐어
-
-근데 상태는 비동기야
-
-저장되기전에 그냥 모두 돌아가버림 태초의 세계가 되어버리는셈
-
-태초의 세계로 만든 후 > 저장을한다 이 수순이 제일 모션이 깔끔한데
-
-1.리셋 모션 상태 만들어
-2.셋타임아웃 함수로 일정 시간 후 리셋 모션 상태를 다시 초기화해
-3.모션 리셋 함수만들어
-4.셋 객체에 아이디를 포함하는지 확인하는 상태변수를 인자로 받아
-5.아이디가 있으면 모션 적용안해
-6.근데 리셋모션 상태가 트루다? 그럼 모션 작동해
-
-
-지금 코드의 문제
-1.모션 원위치가 제대로 작동하지 않음 (끝에 진짜 아주 쬐금 튀어나와있음)
-2.반복하다보면 다른 요소가 째금 튀어나오고 멈춰버림
-2.반복 시 다른 요소 빼면 그때 다 와랄ㄹ라 들어감
-3.반복 시 모션도 튀고 난리굿임
-4.보더가 깜빡거림 */
-
-/* 
-맵 
-id={item.id}
-item-id={item.id}
-두 차이가 뭘까 어쨋든 각 요소에 아이디를 넣어준다
-프레이머 모션 버릴것
-모션끼리 충돌때문에 원하는대로 동작이 잘 안된다
-
-모션이 원하는대로 잘 안된다? 그럼 클레스네임을 부여해서 요소 속성이 잘 적용되는지 확인할것 */
-
-/* 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-바텀시트 재정비 코드 시작
-
-
-*/
-
-.test-header-wrap {
-  width: 100%;
-  height: 50rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  background-color: gray;
-}
-.test-header {
-  width: 20rem;
-  padding: 1rem;
-  background-color: black;
-}
-.test-contents-wrap {
-  width: 100%;
-  height: 100%;
-  color: white;
-}
+스테이트는
+바텀시트의 위치가 변경될때마다 위치값을 저장하고 
+다시 드래그할때마다 알이에프에 저장된 값을 이용해 이전 위치 기준으로 이동거리를 계산한다 */
