@@ -20,6 +20,8 @@ html {
   align-items: center;
   background-color: black;
   font-size: 1.5rem;
+
+  user-select: none; /* 드래그 중 텍스트 선택 방지 */
 }
 
 /* 카카오 지도 */
@@ -67,7 +69,7 @@ html {
 .bottom-sheet-wrap {
   position: relative;
   overflow: hidden; /* 화면 밖으로 넘는 부분 숨기기 */
-  z-index: 2;
+  z-index: 10;
 }
 
 .bottom-sheet {
@@ -81,10 +83,10 @@ html {
 }
 
 .sheet-header {
-  position: absolute;
+  /* position: absolute;
   left: 0;
   right: 0;
-  top: 0;
+  top: 0; */
   height: 5rem; /* 헤더의 높이 */
   background-color: #eee;
   display: flex;
@@ -112,9 +114,108 @@ html {
   ); /* 최대 높이를 설정하여, 그 이상일 경우 스크롤이 생기도록 함 */
 }
 
-.sheet-content {
+/* .sheet-content {
   margin-bottom: 1rem;
   padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   background: #f9f9f9;
   border-radius: 8px;
+} */
+
+/* 시트 콘텐츠  */
+
+/* .content-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 2rem;
 }
+
+.content-item img {
+  width: 30rem;
+  position: relative;
+  border-radius: 8px;
+}
+
+.content-txt {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.delete-btn {
+  width: 15rem;
+  position: absolute;
+  right: -15rem;
+  border-radius: 8px;
+} */
+
+.sheet-content {
+  position: relative;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 8px;
+
+  transition: transform 0.8s ease-in-out;
+}
+
+.content-item {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 2rem;
+  background: #f9f9f9;
+  overflow: hidden;
+}
+
+.content-item img {
+  width: 15%;
+  border-radius: 8px;
+}
+
+.content-txt {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.delete-btn {
+  width: 9%;
+  position: absolute;
+  right: -18rem; /* 기본 위치 */
+  border-radius: 0 8px 8px 0;
+  cursor: pointer;
+}
+
+.index-change-btn {
+  position: absolute;
+  right: 5rem;
+}
+
+/* const sortableRef = useRef<HTMLDivElement | null>(null);
+
+useEffect(() => {
+  if (sortableRef.current) {
+    const sortable = new Sortable(sortableRef.current, {
+      onEnd(e: any) {
+        const newStoreMarkers = [...storeMarkers];
+        const movedItem = newStoreMarkers.splice(e.oldIndex as number, 1)[0];
+        newStoreMarkers.splice(e.newIndex as number, 0, movedItem);
+        setStoreMarkers(newStoreMarkers);
+      },
+      handle: ".index-change-btn", // 여기서 버튼을 지정하여 해당 요소만 드래그 가능
+      animation: 150,
+      ghostClass: "blue-background-class",
+      preventOnFilter: false, // 다른 필터를 무시
+    });
+
+    return () => {
+      sortable.destroy();
+    };
+  }
+}, [storeMarkers, setStoreMarkers]); */

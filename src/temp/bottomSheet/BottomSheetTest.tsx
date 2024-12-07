@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { miniData } from "../data";
-import "./bottom.css";
+import "./sheet.css";
 
 function BottomSheetTest() {
   const [testState] = useState(miniData);
