@@ -18,18 +18,6 @@ export type MapType = {
   errMsg: string;
 };
 
-export type MAX_YSheetMetrics = {
-  touchStart: {
-    sheetY: number;
-    touchY: number;
-  };
-  touchMove: {
-    prevTouchY?: number;
-    movingDirection: "none" | "down" | "up";
-  };
-  isContentAreaTouched: boolean;
-};
-
 export type MapStoreMarkerPropsType = {
   item: StorePositionsType;
   isOpenStates: Record<string, boolean>;

@@ -5,8 +5,8 @@ import BottomSheetTest from "./temp/bottomSheet/BottomSheetTest";
 function App() {
   return (
     <>
-      {/* <BottomSheetMap /> */}
-      <BottomSheetTest />
+      <BottomSheetMap />
+      {/* <BottomSheetTest /> */}
     </>
   );
 }

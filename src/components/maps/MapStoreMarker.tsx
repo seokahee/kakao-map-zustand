@@ -1,5 +1,5 @@
 import { MapMarker } from "react-kakao-maps-sdk";
-import { MapStoreMarkerPropsType } from "../../types/type";
+import { MapStoreMarkerPropsType } from "../../types/kakaoMap";
 
 function MapStoreMarker({
   item,

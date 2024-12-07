@@ -1,9 +1,8 @@
 import { Map, MarkerClusterer } from "react-kakao-maps-sdk";
 import { useKakaoMap } from "../../hook/useKakaoMap";
-import BottomSheet from "../bottomSheet/BottomSheet";
 import MapPositionBtns from "./MapPositionBtns";
 import MapStoreMarker from "./MapStoreMarker";
-import BottomSheetTest from "../../temp/bottomSheet/BottomSheetTest";
+import BottomSheet from "../bottomSheet/BottomSheet";
 
 function BottomSheetMap() {
   const {
@@ -57,8 +56,7 @@ function BottomSheetMap() {
         getCurrentAddress={getCurrentAddress}
       />
       {/* </div> */}
-      {/* <BottomSheet /> */}
-      <BottomSheetTest />
+      <BottomSheet />
     </div>
   );
 }

@@ -3,7 +3,7 @@ import { Map, MapMarker, MarkerClusterer } from "react-kakao-maps-sdk";
 import BottomSheet from "../../components/bottomSheet/BottomSheet";
 import { debounce } from "../../hook/useDebounce";
 import { useMapStore } from "../../store/store";
-import { StorePositionsType } from "../../types/type";
+import { StorePositionsType } from "../../types/kakaoMap";
 import { storePositions } from "../storeData";
 
 function MapMultiMarker() {

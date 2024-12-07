@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { StorePositionsType } from "../types/type";
+import { StorePositionsType } from "../types/kakaoMap";
 
 type MapType = {
   saveState: {

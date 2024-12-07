@@ -1,4 +1,4 @@
-import { MapPositionBtnsProps } from "../../types/type";
+import { MapPositionBtnsProps } from "../../types/kakaoMap";
 
 function MapPositionBtns({
   myMarkerState,
