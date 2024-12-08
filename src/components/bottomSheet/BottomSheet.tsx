@@ -1,3 +1,4 @@
+import { DndContext } from "@dnd-kit/core";
 import { useBottomSheet } from "../../hook/useBottomSheet";
 import BottomSheetContents from "./BottomSheetContents";
 import BottomSheetHeader from "./BottomSheetHeader";
@@ -29,7 +30,9 @@ function BottomSheet() {
         }}
       >
         <BottomSheetHeader handleMoveStart={handleMoveStart} />
-        <BottomSheetContents />
+        <DndContext>
+          <BottomSheetContents />
+        </DndContext>
       </div>
     </div>
   );
