@@ -89,63 +89,81 @@
 import { useEffect, useRef, useState } from "react";
 import { StorePositionsType } from "../../types/kakaoMap"; // StorePositionsType import
 import { miniData } from "../../temp/data"; // miniData import
+import { Reorder } from "framer-motion";
 
 function BottomSheetContents() {
   const [storeMarkers, setStoreMarkers] =
-    useState<StorePositionsType[]>(miniData); // StorePositionsType[]로 명확히 타입 지정
+    useState<StorePositionsType[]>(miniData);
+  const [draggingItemId, setDraggingItemId] = useState<string | null>(null);
+  const [startX, setStartX] = useState(0);
+  const [startY, setStartY] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const [draggingIndexBtn, setDraggingIndexBtn] = useState(false); // Y축 드래그 여부
+
   const contentRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
-  const [isDragging, setIsDragging] = useState(false); // 드래그 상태
-  const [draggingItemId, setDraggingItemId] = useState<string | null>(null); // 현재 드래그 중인 항목 ID
-  const [startX, setStartX] = useState(0); // 가로 드래그 시작 위치
 
   const handleDragStart = (
     e: React.DragEvent<HTMLDivElement>,
-    itemId: string
+    id: string,
+    isIndexBtn: boolean
   ) => {
-    setDraggingItemId(itemId); // 드래그 시작시 draggingItemId 설정
-    setStartX(e.clientX); // 가로 드래그 시작 위치 설정
-    setIsDragging(true); // 드래그 시작 상태 설정
+    setDraggingItemId(id);
+    setStartX(e.clientX);
+    setStartY(e.clientY);
+    setIsDragging(true);
+    setDraggingIndexBtn(isIndexBtn); // Y축 드래그 여부 설정
+
     const img = new Image();
     img.src = ""; // 투명한 이미지로 드래그 그림자 제거
     e.dataTransfer.setDragImage(img, 0, 0);
+
+    // contentRefs.current[id]?.classList.add("dragging");
   };
 
-  const handleDrag = (e: React.DragEvent<HTMLDivElement>, itemId: string) => {
+  const handleDrag = (e: React.DragEvent<HTMLDivElement>, id: string) => {
     if (!isDragging) return;
 
-    const dragItem = contentRefs.current[itemId];
+    const dragItem = contentRefs.current[id];
     if (dragItem) {
-      const moveX = e.clientX - startX; // 현재 위치와 시작 위치의 차이
-      dragItem.style.transform = `translateX(${moveX}px)`; // X축으로 드래그
+      const moveX = e.clientX - startX; // X축 차이
+      const moveY = e.clientY - startY; // Y축 차이
+
+      const limitedMoveX = Math.min(moveX, 185);
+
+      // X축 드래그는 X축으로만 처리
+      if (!draggingIndexBtn && Math.abs(moveX) > Math.abs(moveY)) {
+        dragItem.style.transform = `translateX(${limitedMoveX}px)`; // X축만 이동
+      }
+
+      // Y축 드래그는 index-change-btn에서만 처리
+      if (draggingIndexBtn && Math.abs(moveY) > Math.abs(moveX)) {
+        dragItem.style.transform = `translateY(${moveY}px)`; // Y축만 이동
+      }
     }
 
     Object.keys(contentRefs.current).forEach((id) => {
-      if (id !== itemId && contentRefs.current[id]) {
+      if (id !== draggingItemId && contentRefs.current[id]) {
         contentRefs.current[id]!.style.transform = "translateX(0)"; // 다른 항목들은 원위치로 돌림
       }
     });
   };
 
-  const handleDragOver = (
-    e: React.DragEvent<HTMLDivElement>,
-    itemId: string
-  ) => {
-    e.preventDefault(); // 드래그를 허용
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>, id: string) => {
+    e.preventDefault();
 
-    if (draggingItemId === itemId) return; // 자신에게 드래그 중일 때는 변경하지 않음
+    if (draggingItemId === id) return;
 
-    // 순서를 바꿀 아이템을 찾아 위치를 변경
     const draggedIndex = storeMarkers.findIndex(
       (item) => item.id === draggingItemId
     );
-    const targetIndex = storeMarkers.findIndex((item) => item.id === itemId);
+
+    const targetIndex = storeMarkers.findIndex((item) => item.id === id);
 
     if (draggedIndex === targetIndex) return; // 같은 인덱스일 경우 변경하지 않음
 
     const newMarkers = [...storeMarkers];
     const [removed] = newMarkers.splice(draggedIndex, 1); // 드래그된 아이템 제거
     newMarkers.splice(targetIndex, 0, removed); // 새 위치에 삽입
-
     setStoreMarkers(newMarkers); // 순서 변경 후 상태 업데이트
   };
 
@@ -156,7 +174,7 @@ function BottomSheetContents() {
     const moveX = e.clientX - startX; // 현재 위치와 시작 위치의 차이
     const element = contentRefs.current[itemId];
     if (element) {
-      if (moveX < -200) {
+      if (moveX < -100) {
         element.style.transform = `translateX(-18rem)`; // 이동 범위 설정
       } else {
         element.style.transform = `translateX(0)`; // 원위치
@@ -174,7 +192,7 @@ function BottomSheetContents() {
           className="sheet-content"
           ref={(el) => (contentRefs.current[item.id] = el)} // 개별 항목에 ref 설정
           draggable="true"
-          onDragStart={(e) => handleDragStart(e, item.id)} // 드래그 시작
+          onDragStart={(e) => handleDragStart(e, item.id, false)} // X축 드래그
           onDrag={(e) => handleDrag(e, item.id)} // 드래그 중
           onDragEnd={(e) => handleDragEnd(e, item.id)} // 드래그 종료
         >
@@ -210,3 +228,166 @@ function BottomSheetContents() {
 }
 
 export default BottomSheetContents;
+
+// 왼쪽 레프트
+// 오른쪽 라이트
+// 인덱스변경 시 왼쪽 오른쪽 리무브
+
+// import { useEffect, useRef, useState } from "react";
+// import { StorePositionsType } from "../../types/kakaoMap"; // StorePositionsType import
+// import { miniData } from "../../temp/data"; // miniData import
+
+// function BottomSheetContents() {
+//   const [storeMarkers, setStoreMarkers] =
+//     useState<StorePositionsType[]>(miniData);
+//   const contentRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
+//   const [isDragging, setIsDragging] = useState(false);
+//   const [draggingItemId, setDraggingItemId] = useState<string | null>(null);
+//   const [startX, setStartX] = useState(0);
+//   const [startY, setStartY] = useState(0);
+//   const [draggingIndexBtn, setDraggingIndexBtn] = useState(false); // Y축 드래그 여부
+
+//   const handleDragStart = (
+//     e: React.DragEvent<HTMLDivElement>,
+//     itemId: string,
+//     isIndexBtn: boolean
+//   ) => {
+//     setDraggingItemId(itemId);
+//     setStartX(e.clientX);
+//     setStartY(e.clientY);
+//     setIsDragging(true);
+//     setDraggingIndexBtn(isIndexBtn); // Y축 드래그 여부 설정
+
+//     const img = new Image();
+//     img.src = ""; // 투명한 이미지로 드래그 그림자 제거
+//     e.dataTransfer.setDragImage(img, 0, 0);
+
+//     // 드래그 중 클래스를 추가
+//     contentRefs.current[itemId]?.classList.add("dragging");
+//   };
+
+//   const handleDrag = (e: React.DragEvent<HTMLDivElement>, itemId: string) => {
+//     if (!isDragging) return;
+
+//     const dragItem = contentRefs.current[itemId];
+//     if (dragItem) {
+//       // X, Y 위치 차이를 계산
+//       const moveX = e.clientX - startX; // X축 차이
+//       const moveY = e.clientY - startY; // Y축 차이
+
+//       const limitedMoveX = Math.min(moveX, 185);
+
+//       // X축 드래그는 X축으로만 처리
+//       if (!draggingIndexBtn && Math.abs(moveX) > Math.abs(moveY)) {
+//         dragItem.style.transform = `translateX(${limitedMoveX}px)`; // X축만 이동
+//       }
+
+//       console.log("moveX", moveX);
+
+//       // Y축 드래그는 index-change-btn에서만 처리
+//       if (draggingIndexBtn && Math.abs(moveY) > Math.abs(moveX)) {
+//         dragItem.style.transform = `translateY(${moveY}px)`; // Y축만 이동
+//       }
+//     }
+
+//     // 다른 항목들은 원위치로 돌림 (X축 또는 Y축만 처리)
+//     Object.keys(contentRefs.current).forEach((id) => {
+//       if (id !== itemId && contentRefs.current[id]) {
+//         contentRefs.current[id]!.style.transform = "translate(0, 0)";
+//       }
+//     });
+//   };
+
+//   const handleDragOver = (
+//     e: React.DragEvent<HTMLDivElement>,
+//     itemId: string
+//   ) => {
+//     e.preventDefault();
+
+//     // 순서 변경 대상을 나타내기 위해 클래스를 추가
+//     if (draggingItemId === itemId) return;
+
+//     const targetItem = contentRefs.current[itemId];
+//     if (targetItem) {
+//       targetItem.classList.add("drag-target");
+//     }
+
+//     const draggedIndex = storeMarkers.findIndex(
+//       (item) => item.id === draggingItemId
+//     );
+//     const targetIndex = storeMarkers.findIndex((item) => item.id === itemId);
+
+//     if (draggedIndex === targetIndex) return;
+
+//     const newMarkers = [...storeMarkers];
+//     const [removed] = newMarkers.splice(draggedIndex, 1);
+//     newMarkers.splice(targetIndex, 0, removed);
+//     setStoreMarkers(newMarkers);
+//   };
+
+//   const handleDragEnd = (
+//     e: React.DragEvent<HTMLDivElement>,
+//     itemId: string
+//   ) => {
+//     const element = contentRefs.current[itemId];
+//     if (element) {
+//       // 드래그 중 클래스를 제거
+//       element.classList.remove("dragging");
+
+//       // 트랜스폼 초기화
+//       element.style.transform = "translate(0, 0)";
+//     }
+
+//     // 드래그 상태 리셋
+//     setIsDragging(false);
+//     setDraggingItemId(null);
+//     setStartX(0); // X축 초기화
+//     setStartY(0); // Y축 초기화
+//     setDraggingIndexBtn(false); // Y축 드래그 상태 리셋
+//   };
+
+//   return (
+//     <div className="sheet-content-wrap">
+//       {storeMarkers.map((item) => (
+//         <div
+//           key={item.id}
+//           className="sheet-content"
+//           ref={(el) => (contentRefs.current[item.id] = el)}
+//           draggable="true"
+//           onDragStart={(e) => handleDragStart(e, item.id, false)} // X축 드래그
+//           onDrag={(e) => handleDrag(e, item.id)}
+//           onDragEnd={(e) => handleDragEnd(e, item.id)}
+//         >
+//           <div className="content-item">
+//             <img
+//               src="https://i.pinimg.com/originals/35/e4/8e/35e48e469aa636b91a82704da2944670.gif"
+//               alt="매장 임시 이미지"
+//             />
+//             <div className="content-txt">
+//               <div>{item.storeName}</div>
+//               <div>{item.machine}</div>
+//               <div>{item.address}</div>
+//             </div>
+//           </div>
+
+//           <img
+//             className="delete-btn"
+//             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjzkKApgCqmIe2-XZnAZURKLuDmNVwO7jALA&s"
+//             alt="삭제"
+//           />
+
+//           <div
+//             className="index-change-btn"
+//             aria-label="Drag to reorder"
+//             onDragStart={(e) => handleDragStart(e, item.id, true)} // Y축 드래그
+//             onDragOver={(e) => handleDragOver(e, item.id)}
+//           >
+//             인덱스 변경은 여기를 잡으세요
+//           </div>
+//         </div>
+//       ))}
+//     </div>
+//   );
+// }
+
+// export default BottomSheetContents;

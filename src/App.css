@@ -195,16 +195,10 @@ html {
 /* .index-change-btn {
   position: absolute;
   right: 5rem;
-}
-
-.index-change-btn:active .content-item {
-  background-color: #aaa;
 } */
 
 .sheet-content.dragging {
-  opacity: 0.5;
-  background-color: #f0f0f0;
-  transition: opacity 0.2s;
+  /* transition: opacity 0.2s; */
 }
 
 .index-change-btn {
@@ -219,4 +213,11 @@ html {
 
 .index-change-btn:active {
   cursor: grabbing;
+}
+
+/* 수정코드 */
+
+.sheet-content.drag-target {
+  opacity: 0.5;
+  /* 순서를 바꾸려고 하는 대상 항목에 스타일 */
 }
