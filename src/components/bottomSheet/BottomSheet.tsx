@@ -30,9 +30,9 @@ function BottomSheet() {
         }}
       >
         <BottomSheetHeader handleMoveStart={handleMoveStart} />
-        <DndContext>
-          <BottomSheetContents />
-        </DndContext>
+        {/* <DndContext> */}
+        <BottomSheetContents />
+        {/* </DndContext> */}
       </div>
     </div>
   );

@@ -279,14 +279,18 @@ html {
 .index-change-btn {
   width: 15%;
   height: 90%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   position: absolute;
   right: 5rem;
-  cursor: grab;
-  user-select: none;
-  padding: 0.5rem;
-  background-color: #eee;
-  border-radius: 4px;
   z-index: 2;
+
+  -webkit-user-select: none;
+  user-select: none;
+  background-color: #eee;
+  cursor: grab;
 }
 
 .index-change-btn:active {

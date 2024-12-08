@@ -242,6 +242,7 @@ import { useEffect, useRef, useState } from "react";
 import { StorePositionsType } from "../../types/kakaoMap"; // StorePositionsType import
 import { miniData } from "../../temp/data"; // miniData import
 import { Reorder } from "framer-motion";
+import ContentDragBtn from "./ContentDragBtn";
 
 function BottomSheetContents() {
   const [storeMarkers, setStoreMarkers] =
@@ -360,10 +361,9 @@ function BottomSheetContents() {
 
           <div
             className="index-change-btn"
-            aria-label="Drag to reorder"
             onDragOver={(e) => handleDragOver(e, item.id)} // 드래그 중에 순서 변경
           >
-            인덱스 변경은 여기를 잡으세요
+            <ContentDragBtn />
           </div>
         </div>
       ))}
