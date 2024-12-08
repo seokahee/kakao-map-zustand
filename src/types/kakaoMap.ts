@@ -5,6 +5,7 @@ export type StorePositionsType = {
   lat: string | number;
   lng: string | number;
   address: string;
+  xOffset?: number; // X축 드래그로 인해 발생한 변위를 저장
 };
 
 export type LatLngType = {

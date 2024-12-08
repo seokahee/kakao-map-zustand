@@ -114,45 +114,9 @@ html {
   ); /* 최대 높이를 설정하여, 그 이상일 경우 스크롤이 생기도록 함 */
 }
 
-/* .sheet-content {
-  margin-bottom: 1rem;
-  padding: 1rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #f9f9f9;
-  border-radius: 8px;
-} */
-
 /* 시트 콘텐츠  */
 
-/* .content-item {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 2rem;
-}
-
-.content-item img {
-  width: 30rem;
-  position: relative;
-  border-radius: 8px;
-}
-
-.content-txt {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-}
-
-.delete-btn {
-  width: 15rem;
-  position: absolute;
-  right: -15rem;
-  border-radius: 8px;
-} */
-
-.sheet-content {
+/* .sheet-content {
   position: relative;
   margin-bottom: 1rem;
   display: flex;
@@ -171,6 +135,126 @@ html {
   gap: 2rem;
   background: #f9f9f9;
   overflow: hidden;
+  cursor: pointer;
+}
+
+.content-item img {
+  width: 15%;
+  border-radius: 8px;
+}
+
+.content-txt {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.delete-btn {
+  width: 9%;
+  position: absolute;
+  right: -18rem; 
+  border-radius: 0 8px 8px 0;
+  cursor: pointer;
+}
+
+.index-change-btn {
+  position: absolute;
+  right: 5rem;
+  cursor: grab;
+  user-select: none;
+  padding: 0.5rem;
+  background-color: #eee;
+  border-radius: 4px;
+}
+
+.index-change-btn:active {
+  cursor: grabbing;
+}
+
+.dragging-opacity {
+  opacity: 0.5;
+} */
+
+/* 시트 콘텐츠 */
+/* .sheet-content {
+  position: relative;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 8px;
+  transition: transform 0.8s ease-in-out;
+}
+
+.content-item {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 2rem;
+  background: #f9f9f9;
+  overflow: hidden;
+  cursor: pointer;
+  transition: opacity 0.3s ease; /* 드래그 중 opacity 변화 부드럽게 
+}
+
+.content-item img {
+  width: 15%;
+  border-radius: 8px;
+}
+
+.content-txt {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.delete-btn {
+  width: 9%;
+  position: absolute;
+  right: -18rem; /* 기본 위치 
+  border-radius: 0 8px 8px 0;
+  cursor: pointer;
+}
+
+.index-change-btn {
+  width: 15%;
+  height: 90%;
+  position: absolute;
+  right: 5rem;
+  cursor: grab;
+  user-select: none;
+  padding: 0.5rem;
+  background-color: #eee;
+  border-radius: 4px;
+  z-index: 2;
+}
+
+.index-change-btn:active {
+  cursor: grabbing;
+} */
+
+/* 시트 콘텐츠 */
+.sheet-content {
+  position: relative;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 8px;
+  transition: transform 0.8s ease-in-out;
+}
+
+.content-item {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 2rem;
+  background: #f9f9f9;
+  overflow: hidden;
+  cursor: pointer;
+  transition: opacity 0.3s ease; /* 드래그 중 opacity 변화 부드럽게 */
 }
 
 .content-item img {
@@ -192,16 +276,9 @@ html {
   cursor: pointer;
 }
 
-/* .index-change-btn {
-  position: absolute;
-  right: 5rem;
-} */
-
-.sheet-content.dragging {
-  /* transition: opacity 0.2s; */
-}
-
 .index-change-btn {
+  width: 15%;
+  height: 90%;
   position: absolute;
   right: 5rem;
   cursor: grab;
@@ -209,15 +286,9 @@ html {
   padding: 0.5rem;
   background-color: #eee;
   border-radius: 4px;
+  z-index: 2;
 }
 
 .index-change-btn:active {
   cursor: grabbing;
-}
-
-/* 수정코드 */
-
-.sheet-content.drag-target {
-  opacity: 0.5;
-  /* 순서를 바꾸려고 하는 대상 항목에 스타일 */
 }
