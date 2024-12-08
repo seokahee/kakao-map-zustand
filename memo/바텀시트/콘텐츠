@@ -1,0 +1,534 @@
+// 동적 드래그 좌표 설정 코드
+// import { motion, Reorder, useDragControls } from "framer-motion";
+// import { useState } from "react";
+// import { useStoreMarkersStore } from "../store";
+// import ContentDragBtn from "./ContentDragBtn";
+// import ContentItem from "./ContentItem";
+
+// function BottomSheetContents({
+//   setIsMotion,
+// }: {
+//   setIsMotion: (arg: boolean) => void;
+// }) {
+//   const { storeMarkers, setStoreMarkers } = useStoreMarkersStore(); // 지도 영역에 포함되는 매장
+//   const [draggedItems, setDraggedItems] = useState<Set<string>>(new Set()); // 매장 요소 드래그 상태
+//   const [dragDirection, setDragDirection] = useState<"x" | "y" | undefined>(
+//     undefined
+//   ); // 현재 드래그 방향 추적
+
+//   const onPointerDown = () => {
+//     setIsMotion(false); // 부모 모션 비활성화
+//   };
+
+//   const onDragStart = (id: string, e: any, info: any) => {
+//     console.log("너는 호출되겠지 ");
+//     // setDraggedItems((prev) => new Set(prev).add(id));
+//   };
+
+//   const onDragEnd = (e: any, info: any, id: string) => {
+//     if (info.offset.x < -300) {
+//       // X축 드래그로 300px 이상 이동한 경우 삭제 버튼 고정
+//       setDraggedItems((prev) => new Set(prev).add(id));
+//     } else {
+//       // 이동 거리 미만이면 드래그 상태에서 제거
+//       setDraggedItems((prev) => {
+//         setDragDirection(undefined); // 드래그 방향 초기화
+//         const updated = new Set(prev);
+//         updated.delete(id);
+//         return updated;
+//       });
+//     }
+//   };
+
+//   const dragControls = useDragControls();
+
+//   const handleDelete = (id: string) => {
+//     console.log(`삭제: ${id}`);
+//   };
+
+//   const onDrag = (e: any, info: any, id: string) => {
+//     console.log("onDrag 방향을 감지할거야", info);
+//     // if (!dragDirection) {
+//     // Math.abs로 좌표의 절대값을 구한다 ex/ -5 > 5
+//     const absX = Math.abs(info.offset.x); // X축 이동 거리
+//     const absY = Math.abs(info.offset.y); // Y축 이동 거리
+
+//     console.log("absX", absX, "absY", absY);
+
+//     if (absX > absY) {
+//       setDraggedItems((prev) => new Set(prev).add(id));
+//       setDragDirection("x"); // X축 드래그로 고정
+//     }
+//     if (absY > absX) {
+//       setDragDirection("y"); // Y축 드래그로 고정
+//       // }
+//     }
+//   };
+
+//   // const onPan = (e: any, info: any, id: string) => {
+//   //   console.log(
+//   //     "너랑 드래그랑 다를게 뭔데 넌 왜 움직이는건데ㅔ에ㅔ에에ㅔㅔㅔㅔ"
+//   //   );
+//   //   const absX = Math.abs(info.offset.x); // X축 이동 거리
+//   //   const absY = Math.abs(info.offset.y); // Y축 이동 거리
+
+//   //   // X축과 Y축의 이동 거리를 비교하여 드래그 가능한 축을 결정
+//   //   if (absX > absY) {
+//   //     setDragDirection("x"); // X축으로만 드래그
+//   //   } else {
+//   //     setDragDirection("y"); // Y축으로만 드래그
+//   //   }
+
+//   //   // 상태 업데이트 (아이템 드래그 상태)
+//   //   setDraggedItems((prev) => new Set(prev).add(id));
+//   // };
+
+//   return (
+//     <div className="sheet-content-wrap">
+//       <Reorder.Group
+//         axis={dragDirection}
+//         values={storeMarkers}
+//         onReorder={setStoreMarkers}
+//       >
+//         {storeMarkers.map((item) => {
+//           const isItemDragged = draggedItems.has(item.id); // set을 이용해 중복을 없애고,  객체를 변수에 할당
+//           // console.log("draggedItems", draggedItems.has(item.id));
+
+//           return (
+//             <Reorder.Item
+//               key={item.id}
+//               value={item}
+//               dragListener={false}
+//               dragControls={dragControls}
+//             >
+//               <motion.div
+//                 className="sheet-content"
+//                 // drag={"x"}
+//                 // drag={isItemDrag ? "x" : false}
+//                 drag={dragDirection}
+//                 dragMomentum={false} // 모션 밀림 방지
+//                 dragConstraints={{ left: -300, right: 0 }} // 왼쪽으로 최대 300px까지 드래그 가능
+//                 onPointerDown={onPointerDown} // 드래그 시작 시 부모 모션 비활성화
+//                 onDragStart={(e, info) => onDragStart(item.id, e, info)}
+//                 onDragEnd={(e, info) => onDragEnd(e, info, item.id)} // 드래그 끝났을 때 부모 모션 활성화
+//                 onDrag={(e, info) => onDrag(e, info, item.id)}
+//                 // onPan={(e, info) => onPan(e, info, item.id)} // pan 이벤트로 드래그 추적
+//               >
+//                 <ContentItem item={item} />
+
+//                 {!isItemDragged && (
+//                   <div className="dnd-btn">
+//                     <ContentDragBtn
+//                       dragControls={dragControls}
+//                       // setIsItemDrag={setIsItemDrag}
+//                     />
+//                   </div>
+//                 )}
+
+//                 {isItemDragged && (
+//                   <motion.div
+//                     className="sheet-content-btn"
+//                     initial={{ opacity: 0, x: "100%" }} // 기본적으로 숨겨진 버튼
+//                     animate={{
+//                       opacity: isItemDragged ? 1 : 0,
+//                       x: isItemDragged ? 0 : "100%",
+//                     }}
+//                     transition={{ type: "tween", duration: 0.3 }}
+//                     onClick={() => handleDelete(item.id)}
+//                   >
+//                     <img
+//                       src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjzkKApgCqmIe2-XZnAZURKLuDmNVwO7jALA&s"
+//                       alt="삭제 임시 이미지"
+//                     />
+//                   </motion.div>
+//                 )}
+//               </motion.div>
+//             </Reorder.Item>
+//           );
+//         })}
+//       </Reorder.Group>
+//     </div>
+//   );
+// }
+
+// export default BottomSheetContents;
+
+// 불리언값으로 좌표 조정 코드
+import { motion, Reorder, useDragControls } from "framer-motion";
+import { useState } from "react";
+import { useStoreMarkersStore } from "../store";
+import ContentDragBtn from "./ContentDragBtn";
+import ContentItem from "./ContentItem";
+
+function BottomSheetContents({
+  setIsMotion,
+}: {
+  setIsMotion: (arg: boolean) => void;
+}) {
+  const { storeMarkers, setStoreMarkers } = useStoreMarkersStore(); // 지도 영역에 포함되는 매장
+  const [draggedItems, setDraggedItems] = useState<Set<string>>(new Set()); // 매장 요소 드래그 상태
+  const [isItemDrag, setIsItemDrag] = useState(true);
+
+  const onPointerDown = () => {
+    setIsMotion(false); // 부모 모션 비활성화
+  };
+
+  const onDragStart = (id: string) => {
+    setDraggedItems((prev) => new Set(prev).add(id));
+  };
+
+  const onDragEnd = (e: any, info: any, id: string) => {
+    // setIsMotion(true); // 부모 모션 활성화
+
+    if (info.offset.x < -300) {
+      // 왼쪽으로 300px 이상 밀렸을 때 삭제 버튼 노출된 상태로 고정
+      setDraggedItems((prev) => new Set(prev).add(id));
+    } else {
+      setDraggedItems((prev) => {
+        const updated = new Set(prev);
+        updated.delete(id); // 밀리지 않으면 드래그 상태에서 제거
+        return updated;
+      });
+    }
+  };
+
+  const dragControls = useDragControls();
+
+  const handleDelete = (id: string) => {
+    console.log(`삭제: ${id}`);
+  };
+
+  console.log("내가생각해도 이건 엄청 복잡한 방법이야", isItemDrag);
+  return (
+    <div className="sheet-content-wrap">
+      <Reorder.Group axis="y" values={storeMarkers} onReorder={setStoreMarkers}>
+        {storeMarkers.map((item) => {
+          const isItemDragged = draggedItems.has(item.id);
+
+          return (
+            <Reorder.Item
+              key={item.id}
+              value={item}
+              dragListener={false}
+              dragControls={dragControls}
+            >
+              <motion.div
+                className="sheet-content"
+                // drag={"x"}
+                drag={isItemDrag ? "x" : false}
+                dragMomentum={false} // 모션 밀림 방지
+                dragConstraints={{ left: -300, right: 0 }} // 왼쪽으로 최대 300px까지 드래그 가능
+                onPointerDown={onPointerDown} // 드래그 시작 시 부모 모션 비활성화
+                onDragStart={() => onDragStart(item.id)}
+                onDragEnd={(e, info) => onDragEnd(e, info, item.id)} // 드래그 끝났을 때 부모 모션 활성화
+                onDrag={() => console.log("dragControls", dragControls)}
+              >
+                <ContentItem item={item} />
+
+                {!isItemDragged && (
+                  <div className="dnd-btn">
+                    <ContentDragBtn
+                      dragControls={dragControls}
+                      setIsItemDrag={setIsItemDrag}
+                    />
+                  </div>
+                )}
+
+                {isItemDragged && isItemDrag && (
+                  <motion.div
+                    className="sheet-content-btn"
+                    initial={{ opacity: 0, x: "100%" }} // 기본적으로 숨겨진 버튼
+                    animate={{
+                      opacity: isItemDragged ? 1 : 0,
+                      x: isItemDragged ? 0 : "100%",
+                    }} // 드래그할 때만 버튼이 보이도록 설정
+                    transition={{ type: "tween", duration: 0.3 }} // 애니메이션 설정
+                    onClick={() => handleDelete(item.id)} // 삭제 버튼 클릭 시
+                  >
+                    <img
+                      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjzkKApgCqmIe2-XZnAZURKLuDmNVwO7jALA&s"
+                      alt="삭제 임시 이미지"
+                    />
+                  </motion.div>
+                )}
+              </motion.div>
+            </Reorder.Item>
+          );
+        })}
+      </Reorder.Group>
+    </div>
+  );
+}
+
+export default BottomSheetContents;
+
+// 내장객체 코드
+// import { motion, Reorder, useDragControls } from "framer-motion";
+// import { useState } from "react";
+// import { useStoreMarkersStore } from "../store";
+// import ContentDragBtn from "./ContentDragBtn";
+// import ContentItem from "./ContentItem";
+// import { StorePositionsType } from "../types/type";
+
+// function BottomSheetContents({
+//   setIsMotion,
+// }: {
+//   setIsMotion: (arg: boolean) => void;
+// }) {
+//   const { storeMarkers, setStoreMarkers } = useStoreMarkersStore(); // 지도 영역에 포함되는 매장
+//   const [draggedItems, setDraggedItems] = useState<Set<string>>(new Set()); // 매장 요소 드래그 상태
+//   const [isItemDrag, setIsItemDrag] = useState(true);
+
+//   const onPointerDown = () => {
+//     setIsMotion(false); // 부모 모션 비활성화
+//   };
+
+//   const onDragStart = (id: string) => {
+//     console.log("에이설마");
+//     setDraggedItems((prev) => new Set(prev).add(id));
+//   };
+
+//   const onDragEnd = (e: any, info: any, id: string) => {
+//     // setIsMotion(true); // 부모 모션 활성화
+
+//     if (info.offset.x < -300) {
+//       // 왼쪽으로 300px 이상 밀렸을 때 삭제 버튼 노출된 상태로 고정
+//       setDraggedItems((prev) => new Set(prev).add(id));
+//     } else {
+//       setDraggedItems((prev) => {
+//         const updated = new Set(prev);
+//         updated.delete(id); // 밀리지 않으면 드래그 상태에서 제거
+//         return updated;
+//       });
+//     }
+//   };
+
+//   const dragControls = useDragControls();
+
+//   const handleDelete = (id: string) => {
+//     console.log(`삭제: ${id}`);
+//   };
+
+//   const dragHandler = (
+//     e: React.DragEvent<HTMLDivElement>,
+//     item: StorePositionsType
+//   ) => {
+//     e.dataTransfer.setData(
+//       "testData",
+//       JSON.stringify({
+//         id: item.id,
+//         storeName: item.storeName,
+//         machine: item.machine,
+//         lat: item.lat,
+//         lng: item.lng,
+//         address: item.address,
+//       })
+//     );
+//   };
+//   const dropHandler = (e: React.DragEvent<HTMLDivElement>) => {
+//     const test = JSON.parse(e.dataTransfer.getData("testData"));
+//     console.log("라이브러리 개나줘버리라지", test);
+//     // 이제 여기에서 split로 인덱스 변경해주면 끝
+
+//     // 1. 바텀시트만 모션프레이머 라이브러리를 사용한다 (나머진 내장 객체 사용)
+//     // 2. 바텀시트 + x 축 드래그만 모션프레이머 라이브러리를 사용한다 (인덱스 변경만 내장 객체 사용)
+//     // 3. 다 버린다
+
+//     // 1 >  x축 y축 드래그 모션도 가능한데 바텀시트만 라이브러리? 그럴거면 이름 자체에 바텀시트가 붙은 라이브러리를 써야지 왜 모션 라이브러리를 사용해? = 내 능력 부족으로 인해...
+//     // 2 > 1과 동일, 하지만 여기선 할 말이 있지. x,y축 분리를 못했고, 인덱스 변경은 어차피 모션이 같으니 라이브러리 없어도 상관없다! = 이후 유지보수는? 할말없음
+//     // 3. 이거는 아무리 생각해도 미친짓이다 미친짓이야 내가 진짜 정신이 나갔
+//     // 어디까지 버리고 어디까지 가져가야하나
+//   };
+//   return (
+//     <div
+//       className="sheet-content-wrap"
+//       onDrop={(e) => dropHandler(e)}
+//       onDragOver={(e) => {
+//         e.preventDefault();
+//       }}
+//     >
+//       {storeMarkers.map((item) => {
+//         const isItemDragged = draggedItems.has(item.id);
+//         console.log("draggedItems", draggedItems.has(item.id));
+
+//         return (
+//           <div
+//             draggable="true"
+//             onDragStart={(e) => {
+//               dragHandler(e, item);
+//             }}
+//           >
+//             <motion.div
+//               className="sheet-content"
+//               drag={"x"}
+//               // drag={isItemDrag ? "x" : false}
+//               dragMomentum={false} // 모션 밀림 방지
+//               dragConstraints={{ left: -300, right: 0 }} // 왼쪽으로 최대 300px까지 드래그 가능
+//               onPointerDown={onPointerDown} // 드래그 시작 시 부모 모션 비활성화
+//               onDragStart={() => onDragStart(item.id)}
+//               onDragEnd={(e, info) => onDragEnd(e, info, item.id)} // 드래그 끝났을 때 부모 모션 활성화
+//             >
+//               <div className="store-item" id={item.id}>
+//                 <img
+//                   src="https://i.namu.wiki/i/cRmy09fCmil6W_AKYhSNoAluIvm1gNrmGBpLacGMeef8RW4CXohhn9dC-Q8zP5RjiTvErkfQ1Z3vZUpaiFe1ig.gif"
+//                   alt="부리부리 임시 이미지"
+//                   className="store-img"
+//                 />
+//                 <div className="content-info">
+//                   <div>{item.storeName}</div>
+//                   <div>{item.machine}</div>
+//                   <div>{item.address}</div>
+//                 </div>
+//               </div>
+
+//               {!isItemDragged && (
+//                 <div className="dnd-btn">
+//                   <ContentDragBtn
+//                     dragControls={dragControls}
+//                     setIsItemDrag={setIsItemDrag}
+//                   />
+//                 </div>
+//               )}
+
+//               {isItemDragged && (
+//                 <motion.div
+//                   className="sheet-content-btn"
+//                   initial={{ opacity: 0, x: "100%" }} // 기본적으로 숨겨진 버튼
+//                   animate={{
+//                     opacity: isItemDragged ? 1 : 0,
+//                     x: isItemDragged ? 0 : "100%",
+//                   }} // 드래그할 때만 버튼이 보이도록 설정
+//                   transition={{ type: "tween", duration: 0.3 }} // 애니메이션 설정
+//                   onClick={() => handleDelete(item.id)} // 삭제 버튼 클릭 시
+//                 >
+//                   <img
+//                     src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjzkKApgCqmIe2-XZnAZURKLuDmNVwO7jALA&s"
+//                     alt="삭제 임시 이미지"
+//                   />
+//                 </motion.div>
+//               )}
+//             </motion.div>
+//           </div>
+//         );
+//       })}
+//     </div>
+//   );
+// }
+
+// export default BottomSheetContents;
+
+// 모든걸 버린코드
+// import { motion, Reorder, useDragControls } from "framer-motion";
+// import { useState } from "react";
+// import { useStoreMarkersStore } from "../store";
+// import ContentDragBtn from "./ContentDragBtn";
+// import ContentItem from "./ContentItem";
+// import { StorePositionsType } from "../types/type";
+
+// function BottomSheetContents() {
+//   const { storeMarkers, setStoreMarkers } = useStoreMarkersStore(); // 지도 영역에 포함되는 매장
+//   const [draggedItems, setDraggedItems] = useState<Set<string>>(new Set()); // 매장 요소 드래그 상태
+//   const [isItemDrag, setIsItemDrag] = useState(true);
+
+//   const onPointerDown = () => {};
+
+//   const onDragStart = (id: string) => {
+//     console.log("에이설마");
+//     setDraggedItems((prev) => new Set(prev).add(id));
+//   };
+
+//   const onDragEnd = (e: any, info: any, id: string) => {
+//     // setIsMotion(true); // 부모 모션 활성화
+
+//     if (info.offset.x < -300) {
+//       // 왼쪽으로 300px 이상 밀렸을 때 삭제 버튼 노출된 상태로 고정
+//       setDraggedItems((prev) => new Set(prev).add(id));
+//     } else {
+//       setDraggedItems((prev) => {
+//         const updated = new Set(prev);
+//         updated.delete(id); // 밀리지 않으면 드래그 상태에서 제거
+//         return updated;
+//       });
+//     }
+//   };
+
+//   const dragControls = useDragControls();
+
+//   const handleDelete = (id: string) => {
+//     console.log(`삭제: ${id}`);
+//   };
+
+//   const dragHandler = (
+//     e: React.DragEvent<HTMLDivElement>,
+//     item: StorePositionsType
+//   ) => {
+//     e.dataTransfer.setData(
+//       "testData",
+//       JSON.stringify({
+//         id: item.id,
+//         storeName: item.storeName,
+//         machine: item.machine,
+//         lat: item.lat,
+//         lng: item.lng,
+//         address: item.address,
+//       })
+//     );
+//   };
+//   const dropHandler = (e: React.DragEvent<HTMLDivElement>) => {
+//     const test = JSON.parse(e.dataTransfer.getData("testData"));
+//     console.log("라이브러리 개나줘버리라지", test);
+//     // 이제 여기에서 split로 인덱스 변경해주면 끝
+
+//     // 1. 바텀시트만 모션프레이머 라이브러리를 사용한다 (나머진 내장 객체 사용)
+//     // 2. 바텀시트 + x 축 드래그만 모션프레이머 라이브러리를 사용한다 (인덱스 변경만 내장 객체 사용)
+//     // 3. 다 버린다
+
+//     // 1 >  x축 y축 드래그 모션도 가능한데 바텀시트만 라이브러리? 그럴거면 이름 자체에 바텀시트가 붙은 라이브러리를 써야지 왜 모션 라이브러리를 사용해? = 내 능력 부족으로 인해...
+//     // 2 > 1과 동일, 하지만 여기선 할 말이 있지. x,y축 분리를 못했고, 인덱스 변경은 어차피 모션이 같으니 라이브러리 없어도 상관없다! = 이후 유지보수는? 할말없음
+//     // 3. 이거는 아무리 생각해도 미친짓이다 미친짓이야 내가 진짜 정신이 나갔
+//     // 어디까지 버리고 어디까지 가져가야하나
+//   };
+//   return (
+//     <div className="sheet-content-wrap">
+//       {storeMarkers.map((item) => {
+//         return (
+//           <div>
+//             <div className="sheet-content">
+//               <div className="store-item" id={item.id}>
+//                 <img
+//                   src="https://i.namu.wiki/i/cRmy09fCmil6W_AKYhSNoAluIvm1gNrmGBpLacGMeef8RW4CXohhn9dC-Q8zP5RjiTvErkfQ1Z3vZUpaiFe1ig.gif"
+//                   alt="부리부리 임시 이미지"
+//                   className="store-img"
+//                 />
+//                 <div className="content-info">
+//                   <div>{item.storeName}</div>
+//                   <div>{item.machine}</div>
+//                   <div>{item.address}</div>
+//                 </div>
+//               </div>
+
+//               <div className="dnd-btn">
+//                 <ContentDragBtn
+//                   dragControls={dragControls}
+//                   setIsItemDrag={setIsItemDrag}
+//                 />
+//               </div>
+
+//               <div
+//                 className="sheet-content-btn"
+//                 onClick={() => handleDelete(item.id)} // 삭제 버튼 클릭 시
+//               >
+//                 <img
+//                   src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjzkKApgCqmIe2-XZnAZURKLuDmNVwO7jALA&s"
+//                   alt="삭제 임시 이미지"
+//                 />
+//               </div>
+//             </div>
+//           </div>
+//         );
+//       })}
+//     </div>
+//   );
+// }
+
+// export default BottomSheetContents;

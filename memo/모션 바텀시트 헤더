@@ -1,0 +1,9 @@
+function MAX_YSheetHeader() {
+  return (
+    <div className="sheet-handle-wrap">
+      <div className="sheet-btn-handle"></div>
+    </div>
+  );
+}
+
+export default MAX_YSheetHeader;

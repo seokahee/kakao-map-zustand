@@ -1,0 +1,173 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+
+  -ms-overflow-style: none;
+}
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* 카카오 지도 */
+.wrap {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: black;
+}
+
+.map {
+  width: 100%;
+  height: 90%;
+}
+
+.info-window-div {
+  max-width: 300px;
+  padding: 0 5px;
+  white-space: nowrap;
+}
+
+.pointer-btn-wrap {
+  display: flex;
+  justify-content: center;
+  gap: 2em;
+  position: absolute;
+  top: 5%;
+  right: 5%;
+  z-index: 1;
+  flex-direction: column;
+}
+
+.pointer-btn {
+  max-width: 200px;
+  width: 100%;
+  padding: 0.8em;
+  border-radius: 20px;
+  font-size: 1em;
+  border: none;
+  cursor: pointer;
+  box-shadow: 1px 1px 5px 0px black;
+  background: linear-gradient(
+    359.26deg,
+    #3c41c7 0.02%,
+    #3742b2 83.23%,
+    #3642ae 98.76%
+  );
+  color: #ffffff;
+}
+
+.pointer-btn:hover {
+  background: black;
+  color: #cccccc;
+}
+
+/* 바텀시트 */
+/* 모션 프레이머의 기본적으로 translateY가 있기때문에 요소 위치가 불안정함 */
+.sheet-wrap {
+  width: 100%;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  z-index: 1;
+  border-radius: 12px 12px 0 0;
+  background: linear-gradient(
+    359.26deg,
+    #3c41c7 0.02%,
+    #3742b2 83.23%,
+    #3642ae 98.76%
+  );
+  /* position: absolute;
+  clear: both; */
+}
+
+.sheet-handle-wrap {
+  height: 50px;
+  padding: 15px 0;
+  cursor: pointer;
+}
+
+.sheet-btn-handle {
+  width: 20%;
+  height: 30%;
+  border-radius: 10px;
+  background-color: #cccccc;
+  margin: auto;
+}
+
+.sheet-handle-wrap:active .sheet-btn-handle {
+  background: #090909;
+}
+
+.sheet-content-wrap {
+  overflow: auto;
+  max-height: calc(
+    100vh - 100px
+  ); /* 최대 높이를 설정하여, 그 이상일 경우 스크롤이 생기도록 함 */
+}
+
+.sheet-content-body {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid #fff;
+  justify-content: space-between;
+}
+
+.store-item {
+  width: 100%;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 2em;
+}
+
+.store-item img {
+  width: 200px;
+  height: 200px;
+}
+
+.sheet-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #ccc;
+  /* cursor: grab; */
+}
+/* 
+.sheet-content:active {
+  cursor: grabbing;
+} */
+
+.content-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  color: #ccc;
+  font-weight: 600;
+}
+
+.sheet-content-btn {
+  width: 10%;
+  height: 10%;
+}
+
+.dnd-btn {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+/* 
+바텀시트높이이상 올라가지못하게
+버튼이 3/1이상 노출되면 노출 상태 고정
+반대로 밀면 다시 원위치
+위아래 드래그로 인덱스변경
+바텀시트를 벗어나지않게 */

@@ -1,12 +1,10 @@
 import "./App.css";
-import BottomSheetMap from "./bottomSheet/BottomSheetMap";
+import BottomSheetMap from "./components/maps/BottomSheetMap";
 
 function App() {
   return (
     <>
       <BottomSheetMap />
-      {/* <MapMultiMarker /> */}
-      {/* <MapSingleMarker/> */}
     </>
   );
 }

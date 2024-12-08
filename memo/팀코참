@@ -1,0 +1,145 @@
+import { useEffect, useRef, useState } from "react";
+import { useStoreMarkersStore } from "../store";
+import ContentDragBtn from "./ContentDragBtn";
+import gsap from "gsap";
+import Draggable from "react-draggable";
+import Sortable from "sortablejs";
+
+function BottomSheetContents({
+  setIsMotion,
+}: {
+  setIsMotion: (arg: boolean) => void;
+}) {
+  const { storeMarkers, setStoreMarkers } = useStoreMarkersStore();
+  // const [draggedItems, setDraggedItems] = useState<Set<string>>(new Set()); // 아이템 드래그 상태
+
+  const [dragX, setDragX] = useState(0);
+  const [target, setTarget] = useState();
+
+  const [dragstart, setDragStart] = useState(false);
+
+  const [moveX, setMoveX] = useState(0);
+
+  const dragTarget = useRef(null);
+
+  // useEffect(() => {
+  //   if (dragstart) {
+  //     if (moveX <= -50) {
+  //       target.style.setProperty("left", "0px");
+  //       console.log("삭제");
+  //       gsap.to(target, {
+  //         duration: 0.8,
+  //         transform: `translate(-50px, 0px)`,
+  //         translate: "unset",
+  //         left: "0",
+  //         ease: "power4.out",
+  //         onComplete: dragstart&&   setDragStart(false)
+  //       });
+  //     } else {
+  //       target.style.setProperty("left", `${moveX}px`);
+  //       console.log("원상태");
+  //       gsap.to(target, {
+  //         duration: 0.8,
+  //         transform: `unset`,
+  //         translate: "unset",
+  //         left: "0",
+  //         ease: "power4.out",
+  //         onComplete: complete,
+  //       });
+  //     }
+  //   }
+  // }, [target, dragstart]);
+
+  // const handleDragStart = (e) => {
+  //   const target = e.target.closest(".handle-parent");
+  //   setTarget(target);
+  //   setDragX(e.clientX);
+  // };
+
+  // const handleStop = (e, ui) => {
+
+  //   setMoveX(moveX);
+
+  //   setDragStart(true);
+  // };
+  // useEffect(() => {
+  //   var el2 = document.getElementById("test");
+  //   Sortable.create(el2, {
+  //     handle: ".glyphicon-move",
+  //     animation: 150,
+  //   });
+  // }, []);
+
+  const onPointerDown = () => {
+    setIsMotion(false); // 부모 모션 비활성화
+  };
+
+  const handleDelete = (id: string) => {
+    console.log("Deleted", id);
+  };
+
+  return (
+    <div className="sheet-content-wrap" onPointerDown={onPointerDown}>
+      {storeMarkers.map((item) => {
+        // const isItemDragged = draggedItems.has(item.id); // 해당 아이템이 드래그된 상태인지 체크
+
+        return (
+          <Draggable
+            // cancel=".cancel"
+            axis="x"
+            handle=".handle"
+            allowAnyClick={true}
+            position={{ x: 0, y: 0 }}
+            onDrag={(e, info) => {
+              console.log("info", info);
+            }}
+            // onDragStart={(e) => {
+            //   handleDragStart(e);
+            // }}
+
+            // onStop={(e) => {
+            //   handleStop(e);
+            // }}
+            ref={dragTarget}
+            // offsetParent={this}iv key={item.id}
+          >
+            <div>
+              <img
+                src="https://i.namu.wiki/i/cRmy09fCmil6W_AKYhSNoAluIvm1gNrmGBpLacGMeef8RW4CXohhn9dC-Q8zP5RjiTvErkfQ1Z3vZUpaiFe1ig.gif"
+                alt=""
+                className="store-img"
+              />
+              <div className="content-info">
+                <div>{item.storeName}</div>
+                <div>{item.machine}</div>
+                <div>{item.address}</div>
+              </div>
+            </div>
+
+            {/* {!isItemDragged && ( */}
+            <div
+              className="dnd-btn"
+              // class="glyphicon glyphicon-move"
+              aria-hidden="true"
+            >
+              <ContentDragBtn />
+            </div>
+            {/* )} */}
+
+            <div
+              className="sheet-content-btn"
+              onClick={() => handleDelete(item.id)} // 삭제 버튼 클릭 시
+            >
+              <img
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjzkKApgCqmIe2-XZnAZURKLuDmNVwO7jALA&s"
+                alt="삭제 임시 이미지"
+              />
+            </div>
+          </Draggable>
+        );
+      })}
+    </div>
+  );
+}
+
+export default BottomSheetContents;
