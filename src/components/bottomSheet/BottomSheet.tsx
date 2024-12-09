@@ -1,4 +1,3 @@
-import { DndContext } from "@dnd-kit/core";
 import { useBottomSheet } from "../../hook/useBottomSheet";
 import BottomSheetContents from "./BottomSheetContents";
 import BottomSheetHeader from "./BottomSheetHeader";

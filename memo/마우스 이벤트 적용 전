@@ -1,0 +1,139 @@
+import { MouseEvent, useRef, useState } from "react";
+import { miniData } from "../../temp/data";
+import { StorePositionsType } from "../../types/kakaoMap";
+import ContentDragBtn from "./ContentDragBtn";
+import { useStoreMarkersStore } from "../../store/store";
+import { motion, PanInfo, useAnimation } from "framer-motion";
+
+function BottomSheetContents() {
+  const { storeMarkers, setStoreMarkers } = useStoreMarkersStore(); // 지도 영역에 포함되는 매장 데이터
+  const [startX, setStartX] = useState(0); // x 드래그 시작
+  const [startY, setStartY] = useState(0); // y 드래그 시작
+  const [draggingItemId, setDraggingItemId] = useState<string | null>(null); // 인덱스 변경시 id 저장
+  ; const [isDragging, setIsDragging] = useState(false); // 드래그 작동 여부
+
+  const contentRefs = useRef<{ [key: string]: HTMLDivElement | null }>({}); // 매장id 기준 각 아이템 참조
+
+  // 드래그 시작
+  const handleDragStart = (e: React.DragEvent<HTMLDivElement>, id: string) => {
+    setStartX(e.clientX); // x , y 시작점 저장
+    setStartY(e.clientY);
+    setDraggingItemId(id);
+    ; setIsDragging(true); // 드래그 작동
+
+    const img = new Image();
+    img.src = ""; // 투명한 이미지로 드래그 그림자 제거
+    e.dataTransfer.setDragImage(img, 0, 0);
+  };
+
+  // // 드래그 진행 중
+  const handleDrag = (e: React.DragEvent<HTMLDivElement>, id: string) => {
+    ; if (!isDragging) return;
+
+    const dragItem = contentRefs.current[id]; // 드래그중인 아이템
+    const moveX = e.clientX - startX; // X축 차이
+    const moveY = e.clientY - startY; // Y축 차이
+
+    if (dragItem) {
+      // X축
+      if (Math.abs(moveX) > Math.abs(moveY)) {
+        const moveX = e.nativeEvent.offsetX;
+        dragItem.style.transform = `translateX(-${moveX}px)`; // 드래그한 만큼 이동
+
+        Object.keys(contentRefs.current).forEach((id) => {
+          if (contentRefs.current[id]) {
+            contentRefs.current[id]!.style.transform = "translateX(0)"; // 다른 항목들은 원위치로 돌림
+          }
+        });
+      }
+
+      // // Y축
+      if (Math.abs(moveY) > Math.abs(moveX)) {
+        dragItem.classList.add("index");
+      }
+    }
+
+    console.log("dragItem", dragItem);
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>, id: string) => {
+    e.preventDefault();
+    if (draggingItemId === id) return;
+
+    const draggedIndex = storeMarkers.findIndex(
+      (item) => item.id === draggingItemId
+    ); // 드래그 대상 아이템이 원래 있던 위치
+    const targetIndex = storeMarkers.findIndex((item) => item.id === id); // 드래그 대상 아이템이 들어갈 위치
+
+    if (draggedIndex === targetIndex) return; // 같은 인덱스일 경우 변경하지 않음
+
+    const newMarkers = [...storeMarkers];
+    const [removed] = newMarkers.splice(draggedIndex, 1); // 리스트에서 드래그된 아이템 제거
+    newMarkers.splice(targetIndex, 0, removed); // 새 위치에 삽입
+    setStoreMarkers(newMarkers);
+  };
+
+  const handleDragEnd = (e: React.DragEvent<HTMLDivElement>, id: string) => {
+    const moveX = e.clientX - startX; // 현재 위치와 시작 위치의 차이
+
+    const element = contentRefs.current[id];
+    if (element) {
+      if (contentRefs.current[id]) {
+        if (moveX < -100) {
+          element.style.transform = `translateX(-8%)`;
+        } else {
+          element.style.transform = `translateX(0)`; // 원위치
+        }
+      }
+    }
+
+    contentRefs.current[id]?.classList.remove("index");
+    ; setIsDragging(false); // 드래그 종료 상태 설정
+    setDraggingItemId(null);
+  };
+
+  return (
+    <div className="sheet-content-wrap">
+      {storeMarkers.map((item) => (
+        <div
+          key={item.id}
+          className="sheet-content"
+          ref={(el) => (contentRefs.current[item.id] = el)} // 개별 항목에 ref 설정
+          draggable="true"
+          onDragStart={(e) => handleDragStart(e, item.id)}
+          onDrag={(e) => handleDrag(e, item.id)}
+          onDragEnd={(e) => handleDragEnd(e, item.id)}
+        >
+          <div className="content-item">
+            <img
+              src="https://i.pinimg.com/originals/35/e4/8e/35e48e469aa636b91a82704da2944670.gif"
+              alt="매장 임시 이미지"
+            />
+            <div className="content-txt">
+              <div>{item.storeName}</div>
+              <div>{item.machine}</div>
+              <div>{item.address}</div>
+            </div>
+          </div>
+
+          <div
+            className="index-change-btn"
+            onDragOver={(e) => handleDragOver(e, item.id)} // 드래그 중에 순서 변경
+          >
+            <ContentDragBtn />
+          </div>
+
+          <img
+            className="delete-btn"
+            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjzkKApgCqmIe2-XZnAZURKLuDmNVwO7jALA&s"
+            alt="삭제"
+          />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export default BottomSheetContents
+
+마우스 이벤트 적용 전, 그나마 가장 완성도가 높음
