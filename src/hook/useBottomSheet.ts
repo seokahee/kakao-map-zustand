@@ -2,14 +2,14 @@ import { useEffect, useRef, useState } from "react";
 import { BottomEventTypes } from "../types/bottomSheet";
 
 export const useBottomSheet = () => {
-  const [initialHeight, setInitialHeight] = useState(window.innerHeight - 100);
+  const [initialHeight, setInitialHeight] = useState(window.innerHeight - 90);
   const [isDragging, setIsDragging] = useState(false); // 드래그 여부 확인
 
   const startY = useRef(0); // 드래그 시작 위치
   const sheetPosition = useRef(initialHeight); // 바텀시트 이전 값 저장
 
   const minPosition = useRef(window.innerHeight * 0.1); // 상단 제한
-  const maxPosition = useRef(window.innerHeight - 100); // 하단 제한
+  const maxPosition = useRef(window.innerHeight - 90); // 하단 제한
 
   // 화면 크기 변경에 따른 초기 바텀시트 위치 업데이트
   useEffect(() => {
