@@ -1,0 +1,174 @@
+import { motion, useAnimation, useAnimationControls } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import Sortable from "sortablejs";
+import { miniData } from "../data";
+import TestDragBtn from "./TestDragBtn";
+import Draggable from "react-draggable";
+function TestContents() {
+  const [testState, setTestState] = useState(miniData); // 임시 데이터
+  const [activeItem, setActiveItem] = useState<string | null>(null); // 현재 드래그 상태의 항목
+  const [dragStartY, setDragStartY] = useState<boolean>(false); // 드래그 중 여부
+
+  const sortableRef = useRef<HTMLDivElement | null>(null);
+  const contentRefs = useRef<{ [key: string]: HTMLDivElement | null }>({}); // 각 아이템을 참조
+  // const prevDraggedItem = useRef<string | null>(null); // 이전 드래그된 항목을 추적
+
+  useEffect(() => {
+    if (sortableRef.current) {
+      const sortable = new Sortable(sortableRef.current, {
+        onStart(e: any) {
+          contentRefs.current[e.item.id]?.classList.add("drag-y");
+          setDragStartY(true);
+        },
+        onEnd(e: any) {
+          const newStoreMarkers = [...testState];
+          const movedItem = newStoreMarkers.splice(e.oldIndex as number, 1)[0];
+          newStoreMarkers.splice(e.newIndex as number, 0, movedItem);
+
+          setDragStartY(false);
+          setTestState(newStoreMarkers);
+          setActiveItem(null);
+          contentRefs.current[e.item.id]?.classList.remove("drag-y");
+        },
+        handle: ".index-change-btn",
+        animation: 150,
+      });
+
+      return () => {
+        sortable.destroy();
+      };
+    }
+  }, [testState, activeItem]);
+
+  const onDragStart = (e: any) => {
+    if (e.dataTransfer) {
+      const img = new Image();
+      img.src = "";
+      e.dataTransfer.setDragImage(img, 0, 0); // 드래그 잔상 제거
+    }
+  };
+  const handleDragEnd = (info: any, id: string) => {
+    if (info) {
+      if (info.offset.x < -100) {
+        console.log("아진짜왜그러냐진짜", info.offset.x);
+        // prevDraggedItem.current = id;
+        setActiveItem(id); // 이전 드래그된 항목 업데이트
+      } else {
+        setActiveItem(null);
+        // contentRefs.current[id]!.style.transform = "translateX(0)";
+      }
+    } else {
+      return;
+    }
+  };
+  // && prevDraggedItem.current !== id
+  console.log("activeItem", activeItem);
+  // const controls = useAnimation();
+  useEffect(() => {
+    var el2: any = document.getElementById("sheet-content-wrap");
+    console.log(el2);
+    Sortable.create(el2, {
+      handle: ".glyphicon-move",
+      animation: 150,
+    });
+  }, []);
+
+  return (
+    <div
+      id="sheet-content-wrap"
+      className="sheet-content-wrap"
+      ref={sortableRef}
+    >
+      {testState.map((item, index) => {
+        return (
+          <div id="test" key={index}>
+            <Draggable
+              cancel=".cancel"
+              axis="x"
+              handle=".handle"
+              allowAnyClick={true}
+              position={{ x: 0, y: 0 }}
+              scale={1}
+              onStart={(e) => {
+                // handleStart(e);
+              }}
+              onDrag={(e) => {
+                // handleDrag(e, this);
+              }}
+              onStop={(e) => {
+                // handleStop(e);
+              }}
+              // offsetParent={this}
+            >
+              <div className="handle-parent">
+                <div className="handle">x</div>
+                <div>{item.id}</div>
+                <span className="glyphicon glyphicon-move" aria-hidden="true">
+                  y
+                </span>
+              </div>
+            </Draggable>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+export default TestContents;
+
+// 왜 안되는지 차근차근 생각해보자
+//  드래그 기능 = 모션 프레이머
+//  모션 = 모션 프레이머 (강제로 css 애니메이션 주입 시 충돌)
+
+//  1. 드래그 해  > 버튼 1이 나오지
+//  2. 다른애 드래그 해 > 버튼 1은 들어가고 버튼 2가 들어가지
+
+//  구현 과정
+//  1. active state 생성
+//  2. dragEnd 함수에서 offset.x 거리가 -100보다 작으면 (왼쪽으로 더 많이 당기면) active state에 item id 저장
+//  드래그 거리가 짧으면 state null 유지
+//  3. motion.div animate 속성으로 active state에 id가 있으면 왼쪽으로 -200 이동 없으면? 0 움직이지않음
+//  4. state는 비동기적으로 작동하니까 useEffect 의존성 배열에 넣음
+//  5. 정상작동~
+
+//  근데 왜 거리 짧을때는 안되냐 돌아가는건 되면서 진짜 그지같이 안될거면 둘 다 안되던가
+//  콘솔찍어보니 id null인거 확인됨 근데 안돌아가고 쬐금 남은상태로 고정
+//  강제로 css 적용시 됐다 안됐다, 여러 요소가 다 나오기도 한다
+
+
+ css
+ .ele-parent {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  border: 1px solid red;
+  position: relative;
+}
+
+.react-draggable {
+  display: flex;
+  flex-direction: row;
+  border: 1px solid black;
+  padding: 10px;
+  /* position: absolute; */
+}
+
+#test {
+  position: relative;
+  width: 50%;
+  margin: 0 auto;
+}
+.glyphicon-move,
+.handle {
+  cursor: -webkit-grabbing;
+  cursor: grabbing;
+  border: 1px solid black;
+  padding: 5px;
+  display: inline-block;
+  margin-left: 10px;
+}
+
+.list-group-item:nth-of-type(n + 2) {
+  margin-top: 10px;
+}

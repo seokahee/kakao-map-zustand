@@ -14,8 +14,8 @@ export const useBottomSheet = () => {
   // 화면 크기 변경에 따른 초기 바텀시트 위치 업데이트
   useEffect(() => {
     const updatePosition = () => {
-      // setInitialHeight(window.innerHeight - 50);
-      setInitialHeight(sheetPosition.current);
+      setInitialHeight(window.innerHeight - 90);
+      // setInitialHeight(sheetPosition.current);
     };
     updatePosition();
     window.addEventListener("resize", updatePosition);

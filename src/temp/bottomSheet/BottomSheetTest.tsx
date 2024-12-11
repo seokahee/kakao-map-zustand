@@ -1,22 +1,21 @@
 import { useEffect, useRef, useState } from "react";
-import { miniData } from "../data";
 import "./sheet.css";
+import TestContents from "./TestContents";
 
 function BottomSheetTest() {
-  const [testState] = useState(miniData);
-  const [initial, setInitial] = useState(window.innerHeight - 50); // 바텀시트 초기값
+  const [initial, setInitial] = useState(window.innerHeight - 90); // 바텀시트 초기값
   const [isDragging, setIsDragging] = useState(false); // 드래그 여부 확인
 
   const startY = useRef(0); // 드래그 시작 위치 설정
   const sheetPosition = useRef(initial); // 바텀시트 이전 값 저장
 
   const minPosition = useRef(window.innerHeight * 0.1); // 상단 제한
-  const maxPosition = useRef(window.innerHeight - 50); // 하단 제한
+  const maxPosition = useRef(window.innerHeight - 90); // 하단 제한
 
   // 화면 크기 변경 감지
   useEffect(() => {
     const updatePositions = () => {
-      setInitial(window.innerHeight - 50);
+      setInitial(window.innerHeight - 90);
     };
 
     // 초기 화면 크기 및 크기 변경 시 갱신
@@ -84,15 +83,8 @@ function BottomSheetTest() {
         >
           <div className="sheet-handle"></div>
         </div>
-        <div className="sheet-content">
-          {testState.map((item) => (
-            <div key={item.id} className="sheet-contents">
-              <div>{item.storeName}</div>
-              <div>{item.machine}</div>
-              <div>{item.address}</div>
-            </div>
-          ))}
-        </div>
+
+        <TestContents />
       </div>
     </div>
   );

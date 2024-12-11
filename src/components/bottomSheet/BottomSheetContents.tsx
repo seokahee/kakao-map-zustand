@@ -19,9 +19,8 @@ function BottomSheetContents() {
     setIsDragging(true);
 
     startX.current = e.clientX || e.touches?.[0].clientX;
-    dragXPosition.current[id] = dragX[id] || 0; // 드래그 시작 시 현재 위치 저장
 
-    console.log("startX.current ");
+    dragXPosition.current[id] = dragX[id] || 0; // 드래그 시작 시 현재 위치 저장
 
     Object.keys(contentRefs.current).forEach((id) => {
       if (contentRefs.current[id]) {
@@ -35,6 +34,43 @@ function BottomSheetContents() {
       e.dataTransfer.setDragImage(img, 0, 0); // 드래그 잔상 제거
     }
   };
+
+  // const getClientX = (e: any): number => {
+  //   // 마우스 이벤트와 터치 이벤트에 따라 clientX를 반환
+  //   if (e.clientX !== undefined) {
+  //     return e.clientX; // 마우스 이벤트
+  //   } else if (e.touches?.[0]?.clientX !== undefined) {
+  //     return e.touches[0].clientX; // 터치 이벤트 (touchstart, touchmove)
+  //   } else if (e.changedTouches?.[0]?.clientX !== undefined) {
+  //     return e.changedTouches[0].clientX; // 터치 이벤트 (touchend)
+  //   }
+  //   return 0; // 기본값
+  // };
+  //   const handleDragStart = (e: any, id: string) => {
+  //     setDraggingItemId(id);
+  //     setIsDragging(true);
+
+  //     const currentX = getClientX(e); // 안전하게 clientX 가져오기
+  //     startX.current = currentX;
+  //     dragXPosition.current[id] = dragX[id] || 0; // 드래그 시작 시 현재 위치 저장
+
+  //     console.log("startX.current ", currentX);
+
+  //     Object.keys(contentRefs.current).forEach((id) => {
+  //       if (contentRefs.current[id]) {
+  //         contentRefs.current[id]!.style.transform = "translateX(0)"; // 다른 항목들은 원위치로 돌림
+  //       }
+  //     });
+
+  //     // e.dataTransfer가 있는 경우에만 처리
+  //     if (e.dataTransfer) {
+  //       const img = new Image();
+  //       img.src =
+  //         "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUA" +
+  //         "AAAFCAYAAACNbyblAAAAHElEQVR42mP8/wcAAwAB/JP9EFwAAAABJRU5ErkJggg=="; // 투명한 이미지 base64
+  //       e.dataTransfer.setDragImage(img, 0, 0); // 드래그 잔상 제거
+  //     }
+  //   };
 
   // 드래그 진행 중
   const handleDrag = (e: any, id: string) => {
