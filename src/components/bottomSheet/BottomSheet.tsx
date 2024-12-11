@@ -29,12 +29,12 @@ function BottomSheet() {
         }}
       >
         <BottomSheetHeader handleMoveStart={handleMoveStart} />
-        {/* <DndContext> */}
         <BottomSheetContents />
-        {/* </DndContext> */}
       </div>
     </div>
   );
 }
 
 export default BottomSheet;
+// 화면비에 따라 펴진상태 적용 수정 예정
+// 펼쳐진 상태에서 화면이 작아지면 transition 적용 안됨

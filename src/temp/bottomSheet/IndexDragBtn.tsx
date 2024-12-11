@@ -1,24 +1,5 @@
-interface ContentDragBtnProps {
-  onDragStart: (e: React.DragEvent<HTMLDivElement>) => void;
-  onDrag: (e: React.DragEvent<HTMLDivElement>) => void;
-  onDragEnd: (e: React.DragEvent<HTMLDivElement>) => void;
-}
-
-// function ContentDragBtn({
-//   onDragStart,
-//   onDrag,
-//   onDragEnd,
-// }: ContentDragBtnProps) {
-
-function TestDragBtn() {
+function IndexDragBtn() {
   return (
-    // <div
-    //   className="index-change-btn"
-    //   draggable="true"
-    //   // onDragStart={onDragStart} // 드래그 시작
-    //   // onDrag={onDrag} // 드래그 중
-    //   // onDragEnd={onDragEnd} // 드래그 종료
-    // >
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 39 39"
@@ -66,4 +47,4 @@ function TestDragBtn() {
   );
 }
 
-export default TestDragBtn;
+export default IndexDragBtn;

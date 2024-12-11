@@ -2,23 +2,30 @@ import { useEffect, useRef, useState } from "react";
 import { BottomEventTypes } from "../types/bottomSheet";
 
 export const useBottomSheet = () => {
-  const [initialHeight, setInitialHeight] = useState(window.innerHeight - 90);
+  const [initialHeight, setInitialHeight] = useState(window.innerHeight * 0.9);
   const [isDragging, setIsDragging] = useState(false); // 드래그 여부 확인
 
   const startY = useRef(0); // 드래그 시작 위치
   const sheetPosition = useRef(initialHeight); // 바텀시트 이전 값 저장
 
   const minPosition = useRef(window.innerHeight * 0.1); // 상단 제한
-  const maxPosition = useRef(window.innerHeight - 90); // 하단 제한
+  const maxPosition = useRef(window.innerHeight * 0.9); // 하단 제한
 
   // 화면 크기 변경에 따른 초기 바텀시트 위치 업데이트
   useEffect(() => {
     const updatePosition = () => {
-      setInitialHeight(window.innerHeight - 90);
-      // setInitialHeight(sheetPosition.current);
+      const newHeight = window.innerHeight;
+      setInitialHeight(newHeight * 0.9); // 바텀시트 초기값 갱신
+      minPosition.current = newHeight * 0.1; // 상단 제한 갱신
+      maxPosition.current = newHeight * 0.9; // 하단 제한 갱신
     };
+
     updatePosition();
     window.addEventListener("resize", updatePosition);
+
+    return () => {
+      window.removeEventListener("resize", updatePosition);
+    };
   }, []);
 
   // 바텀시트 이동 값 추출

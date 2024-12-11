@@ -1,7 +1,9 @@
 import { useDraggable } from "@dnd-kit/core";
 import { StorePositionsType } from "../../types/kakaoMap";
-import TestDragBtn from "./TestDragBtn";
+import IndexDragBtn from "./IndexDragBtn";
 
+// dnd-kit
+// 드래그 범위 적용 안됨, 드래그 속도 일정하지 않음
 export default function Item({
   item,
   draggedPosition,
@@ -37,7 +39,7 @@ export default function Item({
         </div>
       </div>
       <div className="index-change-btn">
-        <TestDragBtn />
+        <IndexDragBtn />
       </div>
 
       <img

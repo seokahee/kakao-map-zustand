@@ -1,12 +1,11 @@
-import "./App.css";
-import BottomSheetMap from "./components/maps/BottomSheetMap";
-import BottomSheetTest from "./temp/bottomSheet/BottomSheetTest";
+// import "./App.css";
+import BasicBottomSheet from "./temp/bottomSheet/BasicBottomSheet";
 
 function App() {
   return (
     <>
       {/* <BottomSheetMap /> */}
-      <BottomSheetTest />
+      <BasicBottomSheet />
     </>
   );
 }

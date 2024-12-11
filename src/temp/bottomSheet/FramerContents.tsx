@@ -1,10 +1,10 @@
-import { motion, useAnimation, useAnimationControls } from "framer-motion";
+import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import Sortable from "sortablejs";
 import { miniData } from "../data";
-import TestDragBtn from "./TestDragBtn";
-import Draggable from "react-draggable";
-function TestContents() {
+import IndexDragBtn from "./IndexDragBtn";
+
+function FramerContents() {
   const [testState, setTestState] = useState(miniData); // 임시 데이터
   const [activeItem, setActiveItem] = useState<string | null>(null); // 현재 드래그 상태의 항목
   const [dragStartY, setDragStartY] = useState<boolean>(false); // 드래그 중 여부
@@ -92,7 +92,7 @@ function TestContents() {
               className="index-change-btn"
               style={{ opacity: activeItem === item.id ? 0 : 1 }}
             >
-              <TestDragBtn />
+              <IndexDragBtn />
             </div>
 
             <img
@@ -107,4 +107,6 @@ function TestContents() {
   );
 }
 
-export default TestContents;
+export default FramerContents;
+// 드래그 길이가 짧아도 원위치 안됨 offset초기화 필요
+// 화면이 작아지면 드래그 그림자? 잔상? 원래 위치에서 조금씩 마우스 따라오는 현상생김

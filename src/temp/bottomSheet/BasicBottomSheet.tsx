@@ -1,26 +1,34 @@
 import { useEffect, useRef, useState } from "react";
 import "./sheet.css";
-import TestContents from "./TestContents";
+import FramerContents from "./FramerContents";
+import DraggableContents from "./DraggableContents";
 
-function BottomSheetTest() {
-  const [initial, setInitial] = useState(window.innerHeight - 90); // 바텀시트 초기값
+function BasicBottomSheet() {
+  const [initial, setInitial] = useState(window.innerHeight * 0.9); // 바텀시트 초기값
   const [isDragging, setIsDragging] = useState(false); // 드래그 여부 확인
 
   const startY = useRef(0); // 드래그 시작 위치 설정
   const sheetPosition = useRef(initial); // 바텀시트 이전 값 저장
 
   const minPosition = useRef(window.innerHeight * 0.1); // 상단 제한
-  const maxPosition = useRef(window.innerHeight - 90); // 하단 제한
+  const maxPosition = useRef(window.innerHeight * 0.9); // 하단 제한
 
   // 화면 크기 변경 감지
   useEffect(() => {
     const updatePositions = () => {
-      setInitial(window.innerHeight - 90);
+      const newHeight = window.innerHeight;
+      setInitial(newHeight * 0.9); // 바텀시트 초기값 갱신
+      minPosition.current = newHeight * 0.1; // 상단 제한 갱신
+      maxPosition.current = newHeight * 0.9; // 하단 제한 갱신
     };
 
-    // 초기 화면 크기 및 크기 변경 시 갱신
+    // // 초기 화면 크기 및 크기 변경 시 갱신
     updatePositions();
     window.addEventListener("resize", updatePositions);
+
+    return () => {
+      window.removeEventListener("resize", updatePositions);
+    };
   }, []);
 
   // 마우스 클릭 또는 터치
@@ -84,10 +92,13 @@ function BottomSheetTest() {
           <div className="sheet-handle"></div>
         </div>
 
-        <TestContents />
+        {/* <FramerContents /> */}
+        <DraggableContents />
       </div>
     </div>
   );
 }
 
-export default BottomSheetTest;
+export default BasicBottomSheet;
+// 화면비에 따라 펴진상태 적용 수정 예정
+// 반응형일때 초기 위치가 즉각 바뀌지 않음
