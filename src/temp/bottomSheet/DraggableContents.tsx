@@ -49,10 +49,9 @@ function DraggableContents() {
 
     if ("clientX" in e) {
       clientX = e.clientX;
-    } else if ("changedTouches)" in e) {
-      clientX = e.changedTouches[0].clientX;
+    } else if ("e.touches || changedTouches)" in e) {
+      clientX = e.touches[0].clientX | e.changedTouches[0].clientX;
     }
-
     return clientX;
   };
 
@@ -70,34 +69,33 @@ function DraggableContents() {
     setDragStartX(clientX);
   };
 
-  const handleDragEnd = (e: any, id: string) => {
+  const handleDragEnd = (e: DraggableEvent, id: string) => {
     console.log("드래그 끝 이벤트에서 타겟을 뒤져라", e);
 
-    // if (dragStartY) return;
+    if (dragStartY) return;
 
-    // const clientX = getClientX(e);
-    // const moveX = clientX - dragStartX;
-    // const item = contentRefs.current[id];
+    const clientX = getClientX(e);
+    const moveX = clientX - dragStartX;
+    const item = contentRefs.current[id];
 
-    // console.log(e.nativeEvent.clientX, e.nativeEvent!.clientY, "nativeEvent");
-    // console.log("드래그 끝", clientX);
+    console.log("드래그 끝", clientX);
 
-    // if (!item) return;
+    if (!item) return;
 
-    // if (moveX < -50) {
-    //   Object.values(contentRefs.current).forEach((ref) => {
-    //     if (ref && ref.classList.contains("left")) {
-    //       ref.classList.add("right");
-    //       ref.classList.remove("left", "btn-hidden");
-    //     }
-    //   });
+    if (moveX < -50) {
+      Object.values(contentRefs.current).forEach((ref) => {
+        if (ref && ref.classList.contains("left")) {
+          ref.classList.add("right");
+          ref.classList.remove("left", "btn-hidden");
+        }
+      });
 
-    //   item.classList.add("left");
-    //   item.classList.remove("right");
-    // } else if (!dragStartY) {
-    //   item.classList.add("right");
-    //   item.classList.remove("left", "btn-hidden");
-    // }
+      item.classList.add("left");
+      item.classList.remove("right");
+    } else if (!dragStartY) {
+      item.classList.add("right");
+      item.classList.remove("left", "btn-hidden");
+    }
   };
 
   return (
@@ -111,19 +109,16 @@ function DraggableContents() {
           >
             <Draggable
               cancel=".cancel"
-              axis={dragStartY ? "none" : "x"}
+              axis={dragStartY ? undefined : "x"}
               handle=".handle"
               position={{ x: 0, y: 0 }}
-              bounds={{ left: -100, right: 0 }}
+              bounds={{ left: -200, right: 0 }}
               onStart={(e) => {
                 handleDragStart(e, item.id);
               }}
               onStop={(e) => {
                 handleDragEnd(e, item.id);
               }}
-              // onDrag={(e) => {
-              //   handleDragEnd(e, item.id);
-              // }}
             >
               <div className="handle">
                 <div className="content-item">
