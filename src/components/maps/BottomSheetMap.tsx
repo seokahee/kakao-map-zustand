@@ -21,7 +21,7 @@ function BottomSheetMap() {
     getMarkerImage,
     clustererStyles,
     mapRef,
-  } = useKakaoMap(); // 카카오 맵
+  } = useKakaoMap();
 
   return (
     <div className="wrap">

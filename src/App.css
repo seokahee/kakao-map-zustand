@@ -172,7 +172,6 @@ html {
 
 .drag-y {
   opacity: 0.5;
-  /* opacity: 0; */
 }
 .left {
   transform: translateX(-16rem);
@@ -185,11 +184,6 @@ html {
 
 .btn-hidden .index-change-btn {
   display: none;
-}
-
-/* 모바일에서도 그림자는 안보임 그냥 요소가 없음 */
-.sortable-chosen {
-  visibility: hidden;
 }
 
 /* 로딩 */
@@ -214,4 +208,9 @@ html {
     justify-content: center;
     cursor: pointer;
   }
+}
+
+/* 반응형 드래그 그림자 제거 */
+.sortable-fallback {
+  display: none;
 }

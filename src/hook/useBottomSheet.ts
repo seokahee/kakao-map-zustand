@@ -85,3 +85,5 @@ export const useBottomSheet = () => {
     handleMoveEnd,
   };
 };
+
+// 펼친상태 , 닫힌상태 구분해서 이전 상태 유지하는 방법 찾기
