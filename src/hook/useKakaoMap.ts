@@ -46,15 +46,9 @@ export const useKakaoMap = () => {
 
     // 화면 크기 변경 이벤트 처리
     const handleResize = debounce(() => {
-      // 화면 크기 변경 시 지도 중심을 갱신하고 마커들 갱신
+      // 화면 크기 변경 시 지도 중심, 현위치 갱신
       if (mapRef.current) {
         const map = mapRef.current;
-        const newCenter = map.getCenter(); // 중심 좌표 가져오기
-        const newPosition = {
-          lat: newCenter.getLat(),
-          lng: newCenter.getLng(),
-        };
-
         centerChangeHandler(map); // 중심 변경 처리
         getCurrentAddress();
       }
