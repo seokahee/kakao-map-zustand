@@ -44,12 +44,11 @@ export const useKakaoMap = () => {
       console.error("Kakao Maps API가 로드되지 않았습니다.");
     }
 
-    // 화면 크기 변경 이벤트 처리
+    // 화면 크기 변경 시 지도 중심, 현위치 갱신
     const handleResize = debounce(() => {
-      // 화면 크기 변경 시 지도 중심, 현위치 갱신
       if (mapRef.current) {
         const map = mapRef.current;
-        centerChangeHandler(map); // 중심 변경 처리
+        centerChangeHandler(map);
         getCurrentAddress();
       }
     }, 300);

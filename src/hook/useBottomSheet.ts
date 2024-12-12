@@ -15,10 +15,10 @@ export const useBottomSheet = () => {
   useEffect(() => {
     const updatePosition = () => {
       const newHeight = window.innerHeight;
-      setInitialHeight(newHeight * 0.5); // 바텀시트 초기값 갱신
-
       minPosition.current = newHeight * 0.1; // 상단 제한 갱신
       maxPosition.current = newHeight * 0.9; // 하단 제한 갱신
+
+      setInitialHeight(newHeight * 0.5); // 바텀시트 초기값 갱신
     };
 
     updatePosition();
@@ -28,6 +28,9 @@ export const useBottomSheet = () => {
       window.removeEventListener("resize", updatePosition);
     };
   }, []);
+
+  console.log("sheetPosition", sheetPosition.current);
+  console.log("maxPosition", maxPosition.current);
 
   // 바텀시트 이동 값 추출
   const getClientY = ({ e }: BottomEventTypes): number => {

@@ -7,10 +7,16 @@ export const useSheetContent = () => {
   const [dragStartX, setDragStartX] = useState(0); // X축 드래그
   const [dragStartY, setDragStartY] = useState(false); // Y축 드래그
 
+  const [loading, setLoading] = useState(true); // 데이터 로딩 상태
+
   const sortableRef = useRef<HTMLDivElement | null>(null);
   const contentRefs = useRef<{ [key: string]: HTMLDivElement | null }>({}); // 각 아이템을 참조
 
   useEffect(() => {
+    if (storeMarkers.length > 0) {
+      setLoading(false);
+    }
+
     if (sortableRef.current) {
       const sortable = new Sortable(sortableRef.current, {
         setData(dataTransfer) {
@@ -104,5 +110,6 @@ export const useSheetContent = () => {
     sortableRef,
     contentRefs,
     dragStartY,
+    loading,
   };
 };

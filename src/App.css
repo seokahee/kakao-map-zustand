@@ -192,6 +192,11 @@ html {
   visibility: hidden;
 }
 
+/* 로딩 */
+.loading-img {
+  margin: auto;
+}
+
 @media (max-width: 700px) {
   .content-item {
     display: flex;
