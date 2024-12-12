@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useMapStore, useStoreMarkersStore } from "../store/store";
 import { storePositions } from "../temp/storeData";
 import { debounce } from "./useDebounce";
@@ -26,6 +26,8 @@ export const useKakaoMap = () => {
   const { saveState, isSaved, setSaveState, setIsSaved } = useMapStore();
   const { storeMarkers, setStoreMarkers } = useStoreMarkersStore(); // 지도 영역에 포함되는 매장
 
+  const mapRef = useRef<kakao.maps.Map | null>(null);
+
   useEffect(() => {
     if (window.kakao && window.kakao.maps) {
       if (isSaved && saveState.center) {
@@ -41,6 +43,28 @@ export const useKakaoMap = () => {
     } else {
       console.error("Kakao Maps API가 로드되지 않았습니다.");
     }
+
+    // 화면 크기 변경 이벤트 처리
+    const handleResize = debounce(() => {
+      // 화면 크기 변경 시 지도 중심을 갱신하고 마커들 갱신
+      if (mapRef.current) {
+        const map = mapRef.current;
+        const newCenter = map.getCenter(); // 중심 좌표 가져오기
+        const newPosition = {
+          lat: newCenter.getLat(),
+          lng: newCenter.getLng(),
+        };
+
+        centerChangeHandler(map); // 중심 변경 처리
+        getCurrentAddress();
+      }
+    }, 300);
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
 
   // 현재 위치 가져오기
@@ -103,7 +127,7 @@ export const useKakaoMap = () => {
     []
   );
 
-  // 중심좌표 구하기
+  // // 중심좌표 구하기
   const centerChangeHandler = (map: any) => {
     const newCenter = map.getCenter();
     const newPosition = {
@@ -202,5 +226,6 @@ export const useKakaoMap = () => {
     onBoundsChangeHandler,
     getMarkerImage,
     clustererStyles,
+    mapRef,
   };
 };
