@@ -44,59 +44,73 @@ function DraggableContents() {
     }
   }, [testState]);
 
-  const getClientX = (e: DraggableEvent) => {
-    let clientX = 0;
+  // const getClientX = (e: DraggableEvent) => {
+  //   let clientX = 0;
 
-    if ("clientX" in e) {
-      clientX = e.clientX;
-    } else if ("e.touches || changedTouches)" in e) {
-      clientX = e.touches[0].clientX | e.changedTouches[0].clientX;
-    }
-    return clientX;
-  };
+  //   if ("clientX" in e) {
+  //     clientX = e.clientX;
+  //   } else if ("e.touches || changedTouches)" in e) {
+  //     clientX = e.touches[0].clientX | e.changedTouches[0].clientX;
+  //   }
+  //   return clientX;
+  // };
 
   const handleDragStart = (e: any, id: string) => {
     if (dragStartY) return;
 
-    const clientX = getClientX(e);
-    const positionX = (e.changedTouches && e.changedTouches[0]) || e;
-    console.log("시작", positionX.clientX);
     const item = contentRefs.current[id];
 
-    if (!item) return;
-    item.classList.add("btn-hidden");
+    if (item) {
+      // const clientX = getClientX(e);
+      const clientX = e.clientX;
+      const positionX = (e.changedTouches && e.changedTouches[0]) || e;
 
-    setDragStartX(positionX || clientX);
+      item.classList.add("btn-hidden");
+
+      if (clientX) {
+        setDragStartX(clientX);
+      } else {
+        setDragStartX(positionX.clientX);
+      }
+      // setDragStartX(positionX || clientX);
+    }
   };
 
   const handleDragEnd = (e: any, id: string) => {
     if (dragStartY) return;
 
-    const clientX = getClientX(e);
-    const positionX = (e.changedTouches && e.changedTouches[0]) || e;
-
-    const moveX = positionX || clientX - dragStartX;
     const item = contentRefs.current[id];
+    if (item) {
+      // const clientX = getClientX(e);
+      const clientX = e.clientX;
+      const positionX = (e.changedTouches && e.changedTouches[0]) || e;
 
-    console.log("dragStartX", dragStartX);
-    console.log("끝", positionX.clientX);
-    console.log("무브", moveX);
+      // const moveX = positionX - dragStartX;
+      // const moveX = positionX || clientX - dragStartX;
+      const moveX1 = positionX.clientX - dragStartX;
+      const moveX2 = clientX - dragStartX;
 
-    if (!item) return;
+      console.log("dragStartX", dragStartX);
+      console.log("positionX 끝", positionX.clientX);
+      console.log("clientX 끝", clientX);
+      // console.log("무브", moveX);
+      console.log("positionX 무브", moveX1);
+      console.log("clientX 무브", moveX2);
 
-    if (moveX < -50) {
-      Object.values(contentRefs.current).forEach((ref) => {
-        if (ref && ref.classList.contains("left")) {
-          ref.classList.add("right");
-          ref.classList.remove("left", "btn-hidden");
-        }
-      });
+      if (moveX1 || moveX2 < -50) {
+        Object.values(contentRefs.current).forEach((ref) => {
+          if (ref && ref.classList.contains("left")) {
+            ref.classList.add("right");
+            ref.classList.remove("left", "btn-hidden");
+          }
+        });
 
-      item.classList.add("left");
-      item.classList.remove("right");
-    } else if (!dragStartY) {
-      item.classList.add("right");
-      item.classList.remove("left", "btn-hidden");
+        item.classList.add("left");
+        item.classList.remove("right");
+      } else if (!dragStartY) {
+        item.classList.add("right");
+        item.classList.remove("left", "btn-hidden");
+      }
     }
   };
 
