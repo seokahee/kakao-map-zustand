@@ -13,7 +13,15 @@ export const useSheetContent = () => {
   useEffect(() => {
     if (sortableRef.current) {
       const sortable = new Sortable(sortableRef.current, {
-        onStart(e) {
+        setData(dataTransfer) {
+          // const img = new Image();
+          // img.src = "";
+          // dataTransfer.setDragImage(img, 0, 0);
+
+          dataTransfer.setDragImage(document.createElement("div"), 0, 0); // 드래그 잔상 제거
+        },
+
+        onStart() {
           setDragStartY(true);
 
           Object.values(contentRefs.current).forEach((ref) => {

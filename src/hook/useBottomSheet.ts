@@ -15,7 +15,7 @@ export const useBottomSheet = () => {
   useEffect(() => {
     const updatePosition = () => {
       const newHeight = window.innerHeight;
-      setInitialHeight(newHeight * 0.9); // 바텀시트 초기값 갱신
+      setInitialHeight(newHeight * 0.1); // 바텀시트 초기값 갱신
       minPosition.current = newHeight * 0.1; // 상단 제한 갱신
       maxPosition.current = newHeight * 0.9; // 하단 제한 갱신
     };

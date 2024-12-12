@@ -24,7 +24,6 @@ function BottomSheetMap() {
 
   return (
     <div className="wrap">
-      {/* <div className="map-wrap"> */}
       <Map
         center={isSaved ? saveState.center : myMarkerState}
         level={7}
@@ -55,7 +54,6 @@ function BottomSheetMap() {
         getAddressHandle={getAddressHandle}
         getCurrentAddress={getCurrentAddress}
       />
-      {/* </div> */}
       <BottomSheet />
     </div>
   );

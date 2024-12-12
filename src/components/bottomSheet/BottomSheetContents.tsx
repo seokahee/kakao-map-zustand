@@ -25,7 +25,7 @@ function BottomSheetContents() {
               axis={dragStartY ? undefined : "x"}
               handle=".handle"
               position={{ x: 0, y: 0 }}
-              bounds={{ left: -200, right: 0 }}
+              bounds={{ left: -window.innerWidth * 0.2, right: 0 }}
               onStart={(e) => {
                 handleDragStart(e, item.id);
               }}
