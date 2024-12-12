@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import "./sheet.css";
 import FramerContents from "./FramerContents";
 import DraggableContents from "./DraggableContents";
+import DnDKitContents from "./DnDKitContents";
 
 function BasicBottomSheet() {
   const [initial, setInitial] = useState(window.innerHeight * 0.9); // 바텀시트 초기값
@@ -94,6 +95,7 @@ function BasicBottomSheet() {
 
         {/* <FramerContents /> */}
         <DraggableContents />
+        {/* <DnDKitContents /> */}
       </div>
     </div>
   );

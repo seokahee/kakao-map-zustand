@@ -55,30 +55,32 @@ function DraggableContents() {
     return clientX;
   };
 
-  const handleDragStart = (e: DraggableEvent, id: string) => {
+  const handleDragStart = (e: any, id: string) => {
     if (dragStartY) return;
 
     const clientX = getClientX(e);
+    const positionX = (e.changedTouches && e.changedTouches[0]) || e;
+    console.log("시작", positionX.clientX);
     const item = contentRefs.current[id];
-
-    console.log("드래그 시작", clientX);
 
     if (!item) return;
     item.classList.add("btn-hidden");
 
-    setDragStartX(clientX);
+    setDragStartX(positionX || clientX);
   };
 
-  const handleDragEnd = (e: DraggableEvent, id: string) => {
-    console.log("드래그 끝 이벤트에서 타겟을 뒤져라", e);
-
+  const handleDragEnd = (e: any, id: string) => {
     if (dragStartY) return;
 
     const clientX = getClientX(e);
-    const moveX = clientX - dragStartX;
+    const positionX = (e.changedTouches && e.changedTouches[0]) || e;
+
+    const moveX = positionX || clientX - dragStartX;
     const item = contentRefs.current[id];
 
-    console.log("드래그 끝", clientX);
+    console.log("dragStartX", dragStartX);
+    console.log("끝", positionX.clientX);
+    console.log("무브", moveX);
 
     if (!item) return;
 
@@ -149,3 +151,5 @@ function DraggableContents() {
 }
 
 export default DraggableContents;
+// 반응형 터치이벤트인경우 clientX   인식 못함 issues에도 없음 라이브러리 dnd-kit으로 변경 예정
+// 팀장님 코드도 확인 결과 반응형 clientX 인식 못함

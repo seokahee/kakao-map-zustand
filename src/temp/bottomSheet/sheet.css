@@ -63,6 +63,7 @@ html {
 .sheet-content {
   display: flex;
   position: relative;
+  touch-action: none; /* 반응형 터치 활성화 위해 적용*/
 }
 
 .handle {
@@ -73,6 +74,8 @@ html {
   align-items: center;
   cursor: pointer;
   background-color: #f9f9f9;
+
+  touch-action: none;
 }
 
 .content-item {
