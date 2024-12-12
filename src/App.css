@@ -83,7 +83,7 @@ html {
 }
 
 .sheet-header {
-  height: 8%; /* 헤더의 높이 */
+  height: 10%; /* 헤더의 높이 */
   background-color: #eee;
   display: flex;
   justify-content: center;
@@ -96,18 +96,20 @@ html {
 }
 
 .sheet-handle {
-  width: 30rem;
+  width: 20%;
   height: 0.5rem;
   background-color: #aaa;
   border-radius: 10px;
 }
 
 .sheet-content-wrap {
-  padding: 1rem;
-  overflow-y: auto;
   max-height: calc(
     100vh - 10rem
   ); /* 최대 높이를 설정하여, 그 이상일 경우 스크롤이 생기도록 함 */
+  display: flex;
+  overflow-y: auto;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 /* 시트 콘텐츠  */
@@ -167,8 +169,8 @@ html {
 }
 
 .drag-y {
-  /* opacity: 0.5; */
-  opacity: 0;
+  opacity: 0.5;
+  /* opacity: 0; */
 }
 .left {
   transform: translateX(-16rem);
@@ -182,7 +184,4 @@ html {
 
 .btn-hidden .index-change-btn {
   display: none;
-}
-.sortable-ghost {
-  display: none !important;
 }

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import Draggable, { DraggableEvent } from "react-draggable";
+import Draggable from "react-draggable";
 import Sortable from "sortablejs";
 import { miniData } from "../data";
 import IndexDragBtn from "./IndexDragBtn";

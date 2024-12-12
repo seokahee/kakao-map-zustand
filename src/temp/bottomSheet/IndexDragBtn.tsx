@@ -43,7 +43,6 @@ function IndexDragBtn() {
         fill="#CCC"
       ></path>
     </svg>
-    // </div>
   );
 }
 

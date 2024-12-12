@@ -1,4 +1,3 @@
-import React from "react";
 import { BottomEventTypes } from "../../types/bottomSheet";
 
 function BottomSheetHeader({

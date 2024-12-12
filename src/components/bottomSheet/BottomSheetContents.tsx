@@ -1,106 +1,16 @@
-import { useEffect, useRef, useState } from "react";
 import Draggable from "react-draggable";
-import Sortable from "sortablejs";
-import { useStoreMarkersStore } from "../../store/store";
+import { useSheetContent } from "../../hook/useSheetContent";
 import ContentDragBtn from "./ContentDragBtn";
 
 function BottomSheetContents() {
-  const { storeMarkers, setStoreMarkers } = useStoreMarkersStore(); // 지도 영역에 포함되는 매장 데이터
-  const [dragStartX, setDragStartX] = useState(0); // X축 드래그
-  const [dragStartY, setDragStartY] = useState(false); // Y축 드래그
-
-  const sortableRef = useRef<HTMLDivElement | null>(null);
-  const contentRefs = useRef<{ [key: string]: HTMLDivElement | null }>({}); // 각 아이템을 참조
-
-  useEffect(() => {
-    if (sortableRef.current) {
-      const sortable = new Sortable(sortableRef.current, {
-        onStart(e) {
-          setDragStartY(true);
-
-          Object.values(contentRefs.current).forEach((ref) => {
-            if (ref) {
-              ref.classList.remove("left", "right", "btn-hidden");
-            }
-          });
-        },
-        onEnd(e) {
-          const newStoreMarkers = [...storeMarkers];
-          const movedItem = newStoreMarkers.splice(e.oldIndex as number, 1)[0];
-          newStoreMarkers.splice(e.newIndex as number, 0, movedItem);
-
-          setDragStartY(false);
-          setStoreMarkers(newStoreMarkers);
-        },
-        handle: ".index-change-btn",
-        animation: 150,
-        ghostClass: "drag-y",
-      });
-
-      return () => {
-        sortable.destroy();
-      };
-    }
-  }, [storeMarkers]);
-
-  const handleDragStart = (e: any, id: string) => {
-    if (dragStartY) return;
-
-    const item = contentRefs.current[id];
-
-    if (item) {
-      // const clientX = getClientX(e);
-      const clientX = e.clientX;
-      const positionX = (e.changedTouches && e.changedTouches[0]) || e;
-
-      item.classList.add("btn-hidden");
-
-      if (clientX) {
-        setDragStartX(clientX);
-      } else {
-        setDragStartX(positionX.clientX);
-      }
-      // setDragStartX(positionX || clientX);
-    }
-  };
-
-  const handleDragEnd = (e: any, id: string) => {
-    if (dragStartY) return;
-
-    const item = contentRefs.current[id];
-    if (item) {
-      // const clientX = getClientX(e);
-      const clientX = e.clientX;
-      const positionX = (e.changedTouches && e.changedTouches[0]) || e;
-
-      // const moveX = positionX - dragStartX;
-      // const moveX = positionX || clientX - dragStartX;
-      const moveX1 = positionX.clientX - dragStartX;
-      const moveX2 = clientX - dragStartX;
-
-      console.log("dragStartX", dragStartX);
-      console.log("positionX 끝", positionX.clientX);
-      console.log("clientX 끝", clientX);
-      // console.log("무브", moveX);
-      console.log("positionX 무브", moveX1);
-      console.log("clientX 무브", moveX2);
-
-      if (moveX1 || moveX2 < -50) {
-        Object.values(contentRefs.current).forEach((ref) => {
-          if (ref && ref.classList.contains("left")) {
-            ref.classList.add("right");
-            ref.classList.remove("left", "btn-hidden");
-          }
-        });
-
-        item.classList.add("left");
-        item.classList.remove("right");
-      } else if (!dragStartY) {
-        item.classList.add("right");
-        item.classList.remove("left", "btn-hidden");
-      }
-    }
-  };
+  const {
+    handleDragStart,
+    handleDragEnd,
+    storeMarkers,
+    sortableRef,
+    contentRefs,
+    dragStartY,
+  } = useSheetContent();
 
   return (
     <div className="sheet-content-wrap " ref={sortableRef}>

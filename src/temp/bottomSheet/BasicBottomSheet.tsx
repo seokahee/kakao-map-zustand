@@ -1,8 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import "./sheet.css";
-import FramerContents from "./FramerContents";
 import DraggableContents from "./DraggableContents";
-import DnDKitContents from "./DnDKitContents";
+import "./sheet.css";
 
 function BasicBottomSheet() {
   const [initial, setInitial] = useState(window.innerHeight * 0.9); // 바텀시트 초기값
@@ -103,4 +101,3 @@ function BasicBottomSheet() {
 
 export default BasicBottomSheet;
 // 화면비에 따라 펴진상태 적용 수정 예정
-// 반응형일때 초기 위치가 즉각 바뀌지 않음
