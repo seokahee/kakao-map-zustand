@@ -113,33 +113,30 @@ html {
 /* 시트 콘텐츠  */
 
 .sheet-content {
-  margin-bottom: 1rem;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-radius: 8px;
-  transition: transform 0.3s ease-out;
-  background: #f9f9f9;
+  position: relative;
 }
 
-.drag-y {
-  opacity: 0.5;
+.handle {
+  width: 100%;
+  height: 15rem;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  background-color: #f9f9f9;
+
+  /* touch-action: none;  반응형 터치 적용?*/
 }
 
 .content-item {
-  width: 75%;
   display: flex;
   align-items: center;
   gap: 2rem;
-  position: relative;
-
-  cursor: pointer;
-  /* -webkit-user-select: none;
-  user-select: none; 텍스트 선택 효과 지우기 */
 }
 
 .content-item img {
-  width: 15%;
+  width: 20rem;
   border-radius: 8px;
 }
 
@@ -147,26 +144,45 @@ html {
   display: flex;
   flex-direction: column;
   gap: 2rem;
+  font-size: 1.5rem;
 }
 
 .index-change-btn {
-  width: 20%;
+  width: 10rem;
   height: 13vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #eee;
-  cursor: grab;
-}
-
-.index-change-btn:active {
   cursor: grabbing;
+  position: absolute;
+  right: 0;
+  z-index: 5;
 }
 
 .delete-btn {
-  width: 6.6%;
+  width: 15rem;
   position: absolute;
-  right: -7%;
+  right: -15rem;
   cursor: pointer;
-  border-radius: 5px;
+}
+
+.drag-y {
+  /* opacity: 0.5; */
+  opacity: 0;
+}
+.left {
+  transform: translateX(-16rem);
+  transition: transform 1s ease-out;
+}
+
+.right {
+  transform: translateX(0);
+  transition: transform 1s ease-out;
+}
+
+.btn-hidden .index-change-btn {
+  display: none;
+}
+.sortable-ghost {
+  display: none !important;
 }

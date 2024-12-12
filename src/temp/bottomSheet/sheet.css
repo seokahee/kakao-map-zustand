@@ -5,11 +5,11 @@ html {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  -ms-overflow-style: none;
+  /* -ms-overflow-style: none; */
 }
 
 ::-webkit-scrollbar {
-  display: none;
+  /* display: none; */
 }
 
 /* 바텀시트 */
@@ -59,11 +59,10 @@ html {
 }
 
 /* 시트 콘텐츠  */
-
+/* 드래그블 라이브러리 */
 .sheet-content {
   display: flex;
   position: relative;
-  touch-action: none; /* 반응형 터치 활성화 위해 적용*/
 }
 
 .handle {
@@ -75,7 +74,7 @@ html {
   cursor: pointer;
   background-color: #f9f9f9;
 
-  touch-action: none;
+  /* touch-action: none;  반응형 터치 적용?*/
 }
 
 .content-item {
@@ -116,7 +115,8 @@ html {
 }
 
 .drag-y {
-  opacity: 0.5;
+  /* opacity: 0.5; */
+  opacity: 0;
 }
 .left {
   transform: translateX(-16rem);
@@ -130,4 +130,7 @@ html {
 
 .btn-hidden .index-change-btn {
   display: none;
+}
+.sortable-ghost {
+  display: none !important;
 }

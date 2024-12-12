@@ -44,17 +44,6 @@ function DraggableContents() {
     }
   }, [testState]);
 
-  // const getClientX = (e: DraggableEvent) => {
-  //   let clientX = 0;
-
-  //   if ("clientX" in e) {
-  //     clientX = e.clientX;
-  //   } else if ("e.touches || changedTouches)" in e) {
-  //     clientX = e.touches[0].clientX | e.changedTouches[0].clientX;
-  //   }
-  //   return clientX;
-  // };
-
   const handleDragStart = (e: any, id: string) => {
     if (dragStartY) return;
 
@@ -115,7 +104,7 @@ function DraggableContents() {
   };
 
   return (
-    <div className="sheet-content-wrap" ref={sortableRef}>
+    <div className="sheet-content-wrap " ref={sortableRef}>
       {testState.map((item) => {
         return (
           <div
@@ -165,5 +154,3 @@ function DraggableContents() {
 }
 
 export default DraggableContents;
-// 반응형 터치이벤트인경우 clientX   인식 못함 issues에도 없음 라이브러리 dnd-kit으로 변경 예정
-// 팀장님 코드도 확인 결과 반응형 clientX 인식 못함
