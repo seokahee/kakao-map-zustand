@@ -22,7 +22,6 @@ function BottomSheetContents() {
             ref={(el) => (contentRefs.current[item.id] = el)}
           >
             <Draggable
-              cancel=".cancel"
               axis={dragStartY ? undefined : "x"}
               handle=".handle"
               position={{ x: 0, y: 0 }}
